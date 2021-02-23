@@ -54,7 +54,7 @@ const auth = createOAuthAppAuth({
     //   interval: 5,
     // };
 
-    console.log("Open https://github.com/login/device");
+    console.log("Open %s", verification.verification_uri);
     console.log("Enter code: %s", verification.user_code);
   },
 });
