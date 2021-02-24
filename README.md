@@ -12,10 +12,8 @@
 
 - [Usage](#usage)
 - [`createOAuthDeviceAuth(options)`](#createoauthdeviceauthoptions)
-- [`auth()`](#auth)
+- [`auth(options)`](#authoptions)
 - [Authentication object](#authentication-object)
-  - [OAuth authentication](#oauth-authentication)
-  - [OAuth access token authentication](#oauth-access-token-authentication)
 - [`auth.hook(request, route, parameters)` or `auth.hook(request, options)`](#authhookrequest-route-parameters-or-authhookrequest-options)
 - [How it works](#how-it-works)
 - [Contributing](#contributing)
