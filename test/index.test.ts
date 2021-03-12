@@ -89,10 +89,224 @@ test("README example", async () => {
   });
 
   expect(await authentication).toEqual({
+    clientId: "123",
+    clientType: "oauth-app",
     type: "token",
     tokenType: "oauth",
     token: "secret123",
     scopes: [],
+  });
+
+  expect(onVerification).toHaveBeenCalledTimes(1);
+});
+
+test("README example for GitHub App with expiring tokens disabled", async () => {
+  const mock = fetchMock
+    .sandbox()
+
+    .postOnce(
+      "https://github.com/login/device/code",
+      {
+        device_code: "devicecode123",
+        user_code: "usercode123",
+        verification_uri: "https://github.com/login/device",
+        expires_in: 900,
+        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        interval: 0.005,
+      },
+      {
+        headers: {
+          accept: "application/json",
+          "user-agent": "test",
+          "content-type": "application/json; charset=utf-8",
+        },
+        body: {
+          client_id: "lv1.123",
+          scope: "",
+        },
+      }
+    )
+    .postOnce(
+      "https://github.com/login/oauth/access_token",
+      {
+        error: "authorization_pending",
+        error_description: "error_description",
+        error_url: "error_url",
+      },
+      {
+        headers: {
+          accept: "application/json",
+          "user-agent": "test",
+          "content-type": "application/json; charset=utf-8",
+        },
+        body: {
+          client_id: "lv1.123",
+          device_code: "devicecode123",
+          grant_type: "urn:ietf:params:oauth:grant-type:device_code",
+        },
+      }
+    )
+    .postOnce(
+      "https://github.com/login/oauth/access_token",
+      {
+        body: {
+          access_token: "token123",
+          scope: "",
+          token_type: "bearer",
+        },
+        headers: {
+          date: "Thu, 1 Jan 1970 00:00:00 GMT",
+        },
+      },
+      {
+        headers: {
+          accept: "application/json",
+          "user-agent": "test",
+          "content-type": "application/json; charset=utf-8",
+        },
+        body: {
+          client_id: "lv1.123",
+          device_code: "devicecode123",
+          grant_type: "urn:ietf:params:oauth:grant-type:device_code",
+        },
+        overwriteRoutes: false,
+      }
+    );
+
+  const onVerification = jest.fn();
+  const auth = createOAuthDeviceAuth({
+    // "lv1." prefix only exists for GitHub Apps
+    clientId: "lv1.123",
+    onVerification,
+    request: request.defaults({
+      headers: {
+        "user-agent": "test",
+      },
+      request: {
+        fetch: mock,
+      },
+    }),
+  });
+
+  const authentication = await auth({
+    type: "oauth",
+  });
+
+  expect(await authentication).toEqual({
+    type: "token",
+    tokenType: "oauth",
+    clientType: "github-app",
+    clientId: "lv1.123",
+    token: "token123",
+  });
+
+  expect(onVerification).toHaveBeenCalledTimes(1);
+});
+
+test("README example for GitHub App with expiring tokens enabled", async () => {
+  const mock = fetchMock
+    .sandbox()
+
+    .postOnce(
+      "https://github.com/login/device/code",
+      {
+        device_code: "devicecode123",
+        user_code: "usercode123",
+        verification_uri: "https://github.com/login/device",
+        expires_in: 900,
+        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        interval: 0.005,
+      },
+      {
+        headers: {
+          accept: "application/json",
+          "user-agent": "test",
+          "content-type": "application/json; charset=utf-8",
+        },
+        body: {
+          client_id: "lv1.123",
+          scope: "",
+        },
+      }
+    )
+    .postOnce(
+      "https://github.com/login/oauth/access_token",
+      {
+        error: "authorization_pending",
+        error_description: "error_description",
+        error_url: "error_url",
+      },
+      {
+        headers: {
+          accept: "application/json",
+          "user-agent": "test",
+          "content-type": "application/json; charset=utf-8",
+        },
+        body: {
+          client_id: "lv1.123",
+          device_code: "devicecode123",
+          grant_type: "urn:ietf:params:oauth:grant-type:device_code",
+        },
+      }
+    )
+    .postOnce(
+      "https://github.com/login/oauth/access_token",
+      {
+        body: {
+          access_token: "token123",
+          scope: "",
+          token_type: "bearer",
+          expires_in: 28800,
+          refresh_token: "r1.token123",
+          refresh_token_expires_in: 15897600,
+        },
+        headers: {
+          date: "Thu, 1 Jan 1970 00:00:00 GMT",
+        },
+      },
+      {
+        headers: {
+          accept: "application/json",
+          "user-agent": "test",
+          "content-type": "application/json; charset=utf-8",
+        },
+        body: {
+          client_id: "lv1.123",
+          device_code: "devicecode123",
+          grant_type: "urn:ietf:params:oauth:grant-type:device_code",
+        },
+        overwriteRoutes: false,
+      }
+    );
+
+  const onVerification = jest.fn();
+  const auth = createOAuthDeviceAuth({
+    // "lv1." prefix only exists for GitHub Apps
+    clientId: "lv1.123",
+    onVerification,
+    request: request.defaults({
+      headers: {
+        "user-agent": "test",
+      },
+      request: {
+        fetch: mock,
+      },
+    }),
+  });
+
+  const authentication = await auth({
+    type: "oauth",
+  });
+
+  expect(await authentication).toEqual({
+    type: "token",
+    tokenType: "oauth",
+    clientType: "github-app",
+    clientId: "lv1.123",
+    token: "token123",
+    expiresAt: "1970-01-01T08:00:00.000Z",
+    refreshToken: "r1.token123",
+    refreshTokenExpiresAt: "1970-07-04T00:00:00.000Z",
   });
 
   expect(onVerification).toHaveBeenCalledTimes(1);
@@ -207,6 +421,8 @@ test("Caches token", async () => {
   });
 
   expect(authentication1).toEqual({
+    clientId: "123",
+    clientType: "oauth-app",
     type: "token",
     tokenType: "oauth",
     token: "secret123",
@@ -331,6 +547,8 @@ test("auth({ refresh: true })", async () => {
   });
 
   expect(authentication1).toEqual({
+    clientId: "123",
+    clientType: "oauth-app",
     type: "token",
     tokenType: "oauth",
     token: "secret123",
@@ -343,6 +561,8 @@ test("auth({ refresh: true })", async () => {
   });
 
   expect(authentication2).toEqual({
+    clientId: "123",
+    clientType: "oauth-app",
     type: "token",
     tokenType: "oauth",
     token: "secret456",
@@ -461,6 +681,8 @@ test("refreshes token for different scopes", async () => {
   });
 
   expect(authentication1).toEqual({
+    clientId: "123",
+    clientType: "oauth-app",
     type: "token",
     tokenType: "oauth",
     token: "secret123",
@@ -473,11 +695,139 @@ test("refreshes token for different scopes", async () => {
   });
 
   expect(authentication2).toEqual({
+    clientId: "123",
+    clientType: "oauth-app",
     type: "token",
     tokenType: "oauth",
     token: "secret456",
     scopes: ["repo"],
   });
+});
+
+test("does not refresh token for GitHub Apps", async () => {
+  const mock = fetchMock
+    .sandbox()
+
+    // 1st auth() call
+    .postOnce(
+      "https://github.com/login/device/code",
+      {
+        device_code: "devicecode123",
+        user_code: "usercode123",
+        verification_uri: "https://github.com/login/device",
+        expires_in: 900,
+        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        interval: 0.005,
+      },
+      {
+        headers: {
+          accept: "application/json",
+          "user-agent": "test",
+          "content-type": "application/json; charset=utf-8",
+        },
+        body: {
+          client_id: "lv1.123",
+          scope: "",
+        },
+      }
+    )
+    .postOnce(
+      "https://github.com/login/oauth/access_token",
+      {
+        access_token: "secret123",
+        scope: "",
+      },
+      {
+        headers: {
+          accept: "application/json",
+          "user-agent": "test",
+          "content-type": "application/json; charset=utf-8",
+        },
+        body: {
+          client_id: "lv1.123",
+          device_code: "devicecode123",
+          grant_type: "urn:ietf:params:oauth:grant-type:device_code",
+        },
+        overwriteRoutes: false,
+      }
+    )
+
+    // 2nd auth() call
+    .postOnce(
+      "https://github.com/login/device/code",
+      {
+        device_code: "devicecode456",
+        user_code: "usercode456",
+        verification_uri: "https://github.com/login/device",
+        expires_in: 900,
+        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        interval: 0.005,
+      },
+      {
+        headers: {
+          accept: "application/json",
+          "user-agent": "test",
+          "content-type": "application/json; charset=utf-8",
+        },
+        body: {
+          client_id: "lv1.123",
+          scope: "repo",
+        },
+        overwriteRoutes: false,
+      }
+    )
+    .postOnce(
+      "https://github.com/login/oauth/access_token",
+      {
+        access_token: "secret456",
+        scope: "repo",
+      },
+      {
+        headers: {
+          accept: "application/json",
+          "user-agent": "test",
+          "content-type": "application/json; charset=utf-8",
+        },
+        body: {
+          client_id: "lv1.123",
+          device_code: "devicecode456",
+          grant_type: "urn:ietf:params:oauth:grant-type:device_code",
+        },
+        overwriteRoutes: false,
+      }
+    );
+
+  const auth = createOAuthDeviceAuth({
+    clientId: "lv1.123",
+    onVerification: jest.fn(),
+    request: request.defaults({
+      headers: {
+        "user-agent": "test",
+      },
+      request: {
+        fetch: mock,
+      },
+    }),
+  });
+
+  const authentication1 = await auth({
+    type: "oauth",
+  });
+
+  expect(authentication1).toEqual({
+    clientId: "lv1.123",
+    clientType: "github-app",
+    type: "token",
+    tokenType: "oauth",
+    token: "secret123",
+  });
+
+  const authentication2 = await auth({
+    type: "oauth",
+    scopes: ["repo"],
+  });
+
+  expect(authentication2).toEqual(authentication1);
 });
 
 test("test with request instance that has custom baseUrl (GHE)", async () => {
@@ -544,6 +894,8 @@ test("test with request instance that has custom baseUrl (GHE)", async () => {
   const authentication = await auth({ type: "oauth" });
 
   expect(authentication).toEqual({
+    clientId: "123",
+    clientType: "oauth-app",
     type: "token",
     tokenType: "oauth",
     token: "secret123",
@@ -638,6 +990,8 @@ test("slow_down error", async () => {
   });
 
   expect(await authentication).toEqual({
+    clientId: "123",
+    clientType: "oauth-app",
     type: "token",
     tokenType: "oauth",
     token: "secret123",

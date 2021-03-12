@@ -547,6 +547,19 @@ const requestWithAuth = request.defaults({
 const { data: user } = await requestWithAuth("GET /user");
 ```
 
+## Types
+
+```ts
+import {
+  StrategyOptions,
+  AuthOptions,
+  Authentication,
+  OAuthAppAuthentication,
+  GitHubAppAuthentication,
+  GitHubAppAuthenticationWithExpiration,
+} from "@octokit/auth-oauth-device";
+```
+
 ## How it works
 
 GitHub's OAuth Device flow is different from the web flow in two ways
