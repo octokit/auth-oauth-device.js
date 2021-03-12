@@ -14,7 +14,11 @@
 - [`createOAuthDeviceAuth(options)`](#createoauthdeviceauthoptions)
 - [`auth(options)`](#authoptions)
 - [Authentication object](#authentication-object)
+  - [OAuth APP user authentication](#oauth-app-user-authentication)
+  - [GitHub APP user authentication with expiring tokens disabled](#github-app-user-authentication-with-expiring-tokens-disabled)
+  - [GitHub APP user authentication with expiring tokens enabled](#github-app-user-authentication-with-expiring-tokens-enabled)
 - [`auth.hook(request, route, parameters)` or `auth.hook(request, options)`](#authhookrequest-route-parameters-or-authhookrequest-options)
+- [Types](#types)
 - [How it works](#how-it-works)
 - [Contributing](#contributing)
 - [License](#license)
@@ -239,7 +243,18 @@ Defaults to `false`. When set to `false`, calling `auth(options)` will resolve w
 
 ## Authentication object
 
-The async `auth(options)` method resolves to an object with the following properties
+The async `auth(options)` method resolves to one of three possible objects
+
+1. OAuth APP user authentication
+1. GitHub APP user authentication with expiring tokens disabled
+1. GitHub APP user authentication with expiring tokens enabled
+
+The differences are
+
+1. `scopes` is only present for OAuth Apps
+2. `refreshToken`, `expiresAt`, `refreshTokenExpiresAt` are only present for GitHub Apps, and only if token expiration is enabled
+
+### OAuth APP user authentication
 
 <table width="100%">
   <thead align=left>
@@ -269,6 +284,39 @@ The async `auth(options)` method resolves to an object with the following proper
     </tr>
     <tr>
       <th>
+        <code>tokenType</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+        <code>"oauth"</code>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>clientType</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+        <code>"github-app"</code>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>clientId</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+        The app's <code>Client ID</code>
+      </td>
+    </tr>
+    <tr>
+      <th>
         <code>token</code>
       </th>
       <th>
@@ -276,6 +324,48 @@ The async `auth(options)` method resolves to an object with the following proper
       </th>
       <td>
         The personal access token
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>scopes</code>
+      </th>
+      <th>
+        <code>array of strings</code>
+      </th>
+      <td>
+        array of scope names enabled for the token
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+### GitHub APP user authentication with expiring tokens disabled
+
+<table width="100%">
+  <thead align=left>
+    <tr>
+      <th width=150>
+        name
+      </th>
+      <th width=70>
+        type
+      </th>
+      <th>
+        description
+      </th>
+    </tr>
+  </thead>
+  <tbody align=left valign=top>
+    <tr>
+      <th>
+        <code>type</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+        <code>"token"</code>
       </td>
     </tr>
     <tr>
@@ -291,13 +381,143 @@ The async `auth(options)` method resolves to an object with the following proper
     </tr>
     <tr>
       <th>
-        <code>scopes</code>
+        <code>clientType</code>
       </th>
       <th>
-        <code>array of strings</code>
+        <code>string</code>
       </th>
       <td>
-        array of scope names enabled for the token
+        <code>"github-app"</code>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>clientId</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+        The app's <code>Client ID</code>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>token</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+        The personal access token
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+### GitHub APP user authentication with expiring tokens enabled
+
+<table width="100%">
+  <thead align=left>
+    <tr>
+      <th width=150>
+        name
+      </th>
+      <th width=70>
+        type
+      </th>
+      <th>
+        description
+      </th>
+    </tr>
+  </thead>
+  <tbody align=left valign=top>
+    <tr>
+      <th>
+        <code>type</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+        <code>"token"</code>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>tokenType</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+        <code>"oauth"</code>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>clientType</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+        <code>"github-app"</code>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>clientId</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+        The app's <code>Client ID</code>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>token</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+        The user access token
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>refreshToken</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+        The refresh token
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>expiresAt</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+        Date timestamp in <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString">ISO 8601</a> standard. Example: <code>2022-01-01T08:00:0.000Z</code>
+      </td>
+    </tr>
+    <tr>
+      <th>
+        <code>refreshTokenExpiresAt</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+        Date timestamp in <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString">ISO 8601</a> standard. Example: <code>2021-07-01T00:00:0.000Z</code>
       </td>
     </tr>
   </tbody>
@@ -325,6 +545,19 @@ const requestWithAuth = request.defaults({
 });
 
 const { data: user } = await requestWithAuth("GET /user");
+```
+
+## Types
+
+```ts
+import {
+  StrategyOptions,
+  AuthOptions,
+  Authentication,
+  OAuthAppAuthentication,
+  GitHubAppAuthentication,
+  GitHubAppAuthenticationWithExpiration,
+} from "@octokit/auth-oauth-device";
 ```
 
 ## How it works

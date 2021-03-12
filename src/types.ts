@@ -29,12 +29,38 @@ export type AuthOptions = {
   refresh?: boolean;
 };
 
-export type Authentication = {
+export type OAuthAppAuthentication = {
   type: "token";
   tokenType: "oauth";
+  clientType: "oauth-app";
+  clientId: string;
   token: string;
   scopes: string[];
 };
+
+export type GitHubAppAuthentication = {
+  type: "token";
+  tokenType: "oauth";
+  clientType: "github-app";
+  clientId: string;
+  token: string;
+};
+
+export type GitHubAppAuthenticationWithExpiration = {
+  type: "token";
+  tokenType: "oauth";
+  clientType: "github-app";
+  clientId: string;
+  token: string;
+  refreshToken: string;
+  expiresAt: string;
+  refreshTokenExpiresAt: string;
+};
+
+export type Authentication =
+  | OAuthAppAuthentication
+  | GitHubAppAuthentication
+  | GitHubAppAuthenticationWithExpiration;
 
 export type Verification = {
   device_code: string;

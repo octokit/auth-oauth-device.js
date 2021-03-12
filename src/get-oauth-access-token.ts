@@ -81,6 +81,10 @@ function getCachedAuthentication(state: State, auth: AuthOptions) {
   if (auth.refresh === true) return false;
   if (!state.authentication) return false;
 
+  if (!("scopes" in state.authentication)) {
+    return state.authentication;
+  }
+
   const newScope = (auth.scopes || state.scopes).join(" ");
   const currentScope = state.authentication.scopes.join(" ");
 
@@ -89,6 +93,26 @@ function getCachedAuthentication(state: State, auth: AuthOptions) {
   }
 }
 
+type OAuthResponseDataForOAuthApps = {
+  access_token: string;
+  token_type: "bearer";
+  scope: string;
+};
+type OAuthResponseDataForGitHubAppsWithoutExpiration = {
+  access_token: string;
+  token_type: "bearer";
+  scope: "";
+};
+
+type OAuthResponseDataForGitHubAppsWithExpiration = {
+  access_token: string;
+  token_type: "bearer";
+  scope: "";
+  expires_in: number;
+  refresh_token: string;
+  refresh_token_expires_in: number;
+};
+
 type ExchangeCodeResponse = {
   data:
     | {
@@ -96,7 +120,9 @@ type ExchangeCodeResponse = {
         error_description: string;
         error_url: string;
       }
-    | { access_token: string; scope: string };
+    | OAuthResponseDataForOAuthApps
+    | OAuthResponseDataForGitHubAppsWithoutExpiration
+    | OAuthResponseDataForGitHubAppsWithExpiration;
   headers: any;
 };
 
@@ -125,11 +151,45 @@ async function waitForAccessToken(
   const { data, headers }: ExchangeCodeResponse = await request(requestOptions);
 
   if ("access_token" in data) {
+    // Only Client IDs belonging to GitHub Apps have a "lv1." prefix
+    // To be more future proof, we only check for the existense of the "."
+    const clientType = /\./.test(clientId) ? "github-app" : "oauth-app";
+
+    if (clientType === "oauth-app") {
+      return {
+        type: "token",
+        tokenType: "oauth",
+        clientType: "oauth-app",
+        clientId: clientId,
+        token: data.access_token,
+        scopes: data.scope.split(/,\s*/).filter(Boolean),
+      };
+    }
+
+    if ("refresh_token" in data) {
+      const apiTimeInMs = new Date(headers.date as string).getTime();
+
+      return {
+        type: "token",
+        tokenType: "oauth",
+        clientType: "github-app",
+        clientId: clientId,
+        token: data.access_token,
+        refreshToken: data.refresh_token,
+        expiresAt: toTimestamp(apiTimeInMs, data.expires_in),
+        refreshTokenExpiresAt: toTimestamp(
+          apiTimeInMs,
+          data.refresh_token_expires_in
+        ),
+      };
+    }
+
     return {
       type: "token",
       tokenType: "oauth",
+      clientType: "github-app",
+      clientId: clientId,
       token: data.access_token,
-      scopes: data.scope.split(" ").filter(Boolean),
     };
   }
 
@@ -151,4 +211,8 @@ async function waitForAccessToken(
       headers: headers,
     }
   );
+}
+
+function toTimestamp(apiTimeInMs: number, expirationInSeconds: number) {
+  return new Date(apiTimeInMs + expirationInSeconds * 1000).toISOString();
 }

@@ -3,21 +3,19 @@ import { request } from "@octokit/request";
 
 import { auth } from "./auth";
 import { hook } from "./hook";
-import {
-  StrategyOptions,
-  AuthOptions,
-  Authentication,
-  AuthInterface,
-} from "./types";
+import * as Types from "./types";
 import { VERSION } from "./version";
 
-export type Types = {
-  StrategyOptions: StrategyOptions;
-  AuthOptions: AuthOptions;
-  Authentication: Authentication;
-};
+export type StrategyOptions = Types.StrategyOptions;
+export type AuthOptions = Types.AuthOptions;
+export type Authentication = Types.Authentication;
+export type OAuthAppAuthentication = Types.OAuthAppAuthentication;
+export type GitHubAppAuthentication = Types.GitHubAppAuthentication;
+export type GitHubAppAuthenticationWithExpiration = Types.GitHubAppAuthenticationWithExpiration;
 
-export function createOAuthDeviceAuth(options: StrategyOptions): AuthInterface {
+export function createOAuthDeviceAuth(
+  options: Types.StrategyOptions
+): Types.AuthInterface {
   const state = Object.assign(
     {
       request: request.defaults({
