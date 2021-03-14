@@ -10,6 +10,8 @@
 <!-- toc -->
 
 - [Usage](#usage)
+  - [For OAuth Apps](#for-oauth-apps)
+  - [For GitHub Apps](#for-github-apps)
 - [`createOAuthDeviceAuth(options)`](#createoauthdeviceauthoptions)
 - [`auth(options)`](#authoptions)
 - [Authentication object](#authentication-object)
@@ -59,9 +61,12 @@ const { createOAuthDeviceAuth } = require("@octokit/auth-oauth-device");
 </tbody>
 </table>
 
+### For OAuth Apps
+
 ```js
 const auth = createOAuthDeviceAuth({
-  clientId: "123",
+  clientType: "oauth-app",
+  clientId: "1234567890abcdef1234",
   onVerification(verification) {
     // verification example
     // {
@@ -84,8 +89,57 @@ const tokenAuthentication = await auth({
 // {
 //   type: 'token',
 //   tokenType: 'oauth',
+//   clientType: 'oauth-app',
+//   clientId: '1234567890abcdef1234',
 //   token: '...', /* the created oauth token */
 //   scopes: [] /* depend on request scopes by OAuth app */
+// }
+```
+
+### For GitHub Apps
+
+GitHub Apps do not support `scopes`. Client IDs of GitHub Apps have a `lv1.` prefix. If the GitHub App has expiring user tokens enabled, the resulting `authentication` object has extra properties related to expiration and refreshing the token.
+
+```js
+const auth = createOAuthDeviceAuth({
+  clientType: "github-app",
+  clientId: "lv1.1234567890abcdef",
+  onVerification(verification) {
+    // verification example
+    // {
+    //   device_code: "3584d83530557fdd1f46af8289938c8ef79f9dc5",
+    //   user_code: "WDJB-MJHT",
+    //   verification_uri: "https://github.com/login/device",
+    //   expires_in: 900,
+    //   interval: 5,
+    // };
+
+    console.log("Open %s", verification.verification_uri);
+    console.log("Enter code: %s", verification.user_code);
+  },
+});
+
+const tokenAuthentication = await auth({
+  type: "oauth",
+});
+// resolves with
+// {
+//   type: 'token',
+//   tokenType: 'oauth',
+//   clientType: 'github-app',
+//   clientId: 'lv1.1234567890abcdef',
+//   token: '...', /* the created oauth token */
+// }
+// or if expiring user tokens are enabled
+// {
+//   type: 'token',
+//   tokenType: 'oauth',
+//   clientType: 'github-app',
+//   clientId: 'lv1.1234567890abcdef',
+//   token: '...', /* the created oauth token */
+//   refreshToken: "r1.c1b4a2e77838347a7e420ce178f2e7c6912e169246c34e1ccbf66c46812d16d5b1a9dc86a149873c",
+//   expiresAt: "2022-01-01T08:00:0.000Z",
+//   refreshTokenExpiresAt: "2021-07-01T00:00:0.000Z",
 // }
 ```
 
@@ -110,7 +164,7 @@ The `createOAuthDeviceAuth` method accepts a single `options` parameter
   <tbody align=left valign=top>
     <tr>
       <th>
-        <code>options.clientId</code>
+        <code>clientId</code>
       </th>
       <th>
         <code>string</code>
@@ -121,7 +175,7 @@ The `createOAuthDeviceAuth` method accepts a single `options` parameter
     </tr>
     <tr>
       <th>
-        <code>options.onVerification</code>
+        <code>onVerification</code>
       </th>
       <th>
         <code>function</code>
@@ -133,7 +187,7 @@ The `onVerification()` callback can be used to pause until the user completes st
 
 ```js
 const auth = createOAuthDeviceAuth({
-  clientId: "123",
+  clientId: "1234567890abcdef1234",
   onVerification(verification) {
     console.log("Open %s", verification.verification_uri);
     console.log("Enter code: %s", verification.user_code);
@@ -147,7 +201,20 @@ const auth = createOAuthDeviceAuth({
     </tr>
     <tr>
       <th>
-        <code>options.request</code>
+        <code>clientType</code>
+      </th>
+      <th>
+        <code>string</code>
+      </th>
+      <td>
+
+Must be either `oauth-app` or `github-app`. Defaults to `oauth-app`.
+
+</td>
+    </tr>
+    <tr>
+      <th>
+        <code>request</code>
       </th>
       <th>
         <code>function</code>
@@ -158,7 +225,7 @@ const auth = createOAuthDeviceAuth({
 ```js
 const { request } = require("@octokit/request");
 createOAuthDeviceAuth({
-  clientId: 123,
+  clientId: "1234567890abcdef1234",
   clientSecret: "secret",
   request: request.defaults({
     baseUrl: "https://ghe.my-company.com/api/v3",
@@ -175,8 +242,12 @@ createOAuthDeviceAuth({
         <code>array of strings</code>
       </th>
       <td>
-        Array of scope names enabled for the token. Defaults to <code>[]</code>. See <a href="https://docs.github.com/en/developers/apps/scopes-for-oauth-apps#available-scopes">available scopes</a>
-      </td>
+
+Only relavant if `clientType` is set to `"oauth-app"`.
+
+Array of scope names enabled for the token. Defaults to `[]`. See [available scopes](https://docs.github.com/en/developers/apps/scopes-for-oauth-apps#available-scopes).
+
+</td>
     </tr>
   </tbody>
 </table>
@@ -202,7 +273,7 @@ The async `auth()` method returned by `createOAuthDeviceAuth(options)` accepts t
   <tbody align=left valign=top>
     <tr>
       <th>
-        <code>options.type</code>
+        <code>type</code>
       </th>
       <th>
         <code>string</code>
