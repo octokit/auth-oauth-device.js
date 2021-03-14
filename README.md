@@ -4,7 +4,6 @@
 
 [![@latest](https://img.shields.io/npm/v/@octokit/auth-oauth-device.svg)](https://www.npmjs.com/package/@octokit/auth-oauth-device)
 [![Build Status](https://github.com/octokit/auth-oauth-device.js/workflows/Test/badge.svg)](https://github.com/octokit/auth-oauth-device.js/actions?query=workflow%3ATest+branch%3Amain)
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=octokit/auth-oauth-device.js)](https://dependabot.com/)
 
 `@octokit/auth-oauth-device` is implementing one of [GitHub’s OAuth Device Flow](https://docs.github.com/en/developers/apps/authorizing-oauth-apps#device-flow).
 
