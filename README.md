@@ -87,11 +87,11 @@ const tokenAuthentication = await auth({
 });
 // resolves with
 // {
-//   type: 'token',
-//   tokenType: 'oauth',
-//   clientType: 'oauth-app',
-//   clientId: '1234567890abcdef1234',
-//   token: '...', /* the created oauth token */
+//   type: "token",
+//   tokenType: "oauth",
+//   clientType: "oauth-app",
+//   clientId: "1234567890abcdef1234",
+//   token: "...", /* the created oauth token */
 //   scopes: [] /* depend on request scopes by OAuth app */
 // }
 ```
@@ -124,20 +124,20 @@ const tokenAuthentication = await auth({
 });
 // resolves with
 // {
-//   type: 'token',
-//   tokenType: 'oauth',
-//   clientType: 'github-app',
-//   clientId: 'lv1.1234567890abcdef',
-//   token: '...', /* the created oauth token */
+//   type: "token",
+//   tokenType: "oauth",
+//   clientType: "github-app",
+//   clientId: "lv1.1234567890abcdef",
+//   token: "...", /* the created oauth token */
 // }
 // or if expiring user tokens are enabled
 // {
-//   type: 'token',
-//   tokenType: 'oauth',
-//   clientType: 'github-app',
-//   clientId: 'lv1.1234567890abcdef',
-//   token: '...', /* the created oauth token */
-//   refreshToken: "r1.c1b4a2e77838347a7e420ce178f2e7c6912e169246c34e1ccbf66c46812d16d5b1a9dc86a149873c",
+//   type: "token",
+//   tokenType: "oauth",
+//   clientType: "github-app",
+//   clientId: "lv1.1234567890abcdef",
+//   token: "...", /* the created oauth token */
+//   refreshToken: "...",
 //   expiresAt: "2022-01-01T08:00:0.000Z",
 //   refreshTokenExpiresAt: "2021-07-01T00:00:0.000Z",
 // }
