@@ -3,22 +3,24 @@ import { RequestInterface } from "@octokit/types";
 
 import {
   AuthOptions,
+  ClientType,
   State,
   Authentication,
   Verification,
   CodeExchangeResponseError,
 } from "./types";
 
-export async function getOAuthAccessToken(
+export async function getOAuthAccessToken<TClientType extends ClientType>(
   state: State,
   options: {
     request?: RequestInterface;
     auth: AuthOptions;
   }
-): Promise<Authentication> {
-  const scope = (options.auth.scopes || state.scopes).join(" ");
-
-  const cachedAuthentication = getCachedAuthentication(state, options.auth);
+): Promise<Authentication<TClientType>> {
+  const cachedAuthentication = getCachedAuthentication<TClientType>(
+    state,
+    options.auth
+  );
 
   if (cachedAuthentication) return cachedAuthentication;
 
@@ -33,6 +35,10 @@ export async function getOAuthAccessToken(
 
   // Step 1: Request device and user codes
   // https://docs.github.com/en/developers/apps/authorizing-oauth-apps#step-1-app-requests-the-device-and-user-verification-codes-from-github
+  const scope =
+    "scopes" in state
+      ? { scope: (options.auth.scopes || state.scopes).join(" ") }
+      : {};
   const parameters = {
     baseUrl,
     method: "POST",
@@ -41,7 +47,7 @@ export async function getOAuthAccessToken(
       accept: "application/json",
     },
     client_id: state.clientId,
-    scope,
+    ...scope,
   };
 
   const requestCodesResponse = await request(parameters);
@@ -65,10 +71,11 @@ export async function getOAuthAccessToken(
 
   // Step 3: Exchange device code for access token
   // See https://docs.github.com/en/developers/apps/authorizing-oauth-apps#step-3-app-polls-github-to-check-if-the-user-authorized-the-device
-  const authentication = await waitForAccessToken(
+  const authentication = await waitForAccessToken<TClientType>(
     request,
     baseUrl,
     state.clientId,
+    state.clientType,
     verification
   );
 
@@ -77,20 +84,24 @@ export async function getOAuthAccessToken(
   return authentication;
 }
 
-function getCachedAuthentication(state: State, auth: AuthOptions) {
+function getCachedAuthentication<TClientType extends ClientType>(
+  state: State,
+  auth: AuthOptions
+): Authentication<TClientType> | false {
   if (auth.refresh === true) return false;
   if (!state.authentication) return false;
 
-  if (!("scopes" in state.authentication)) {
-    return state.authentication;
+  if (state.clientType === "github-app") {
+    return state.authentication as Authentication<TClientType>;
   }
 
+  const authentication = state.authentication as Authentication<"oauth-app">;
   const newScope = (auth.scopes || state.scopes).join(" ");
-  const currentScope = state.authentication.scopes.join(" ");
+  const currentScope = authentication.scopes.join(" ");
 
-  if (newScope === currentScope) {
-    return state.authentication;
-  }
+  return newScope === currentScope
+    ? (authentication as Authentication<TClientType>)
+    : false;
 }
 
 type OAuthResponseDataForOAuthApps = {
@@ -130,12 +141,13 @@ async function wait(seconds: number) {
   await new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
 
-async function waitForAccessToken(
+async function waitForAccessToken<TClientType extends ClientType>(
   request: RequestInterface,
   baseUrl: string,
   clientId: string,
+  clientType: ClientType,
   verification: Verification
-): Promise<Authentication> {
+): Promise<Authentication<TClientType>> {
   const requestOptions = {
     baseUrl,
     method: "POST",
@@ -151,10 +163,6 @@ async function waitForAccessToken(
   const { data, headers }: ExchangeCodeResponse = await request(requestOptions);
 
   if ("access_token" in data) {
-    // Only Client IDs belonging to GitHub Apps have a "lv1." prefix
-    // To be more future proof, we only check for the existense of the "."
-    const clientType = /\./.test(clientId) ? "github-app" : "oauth-app";
-
     if (clientType === "oauth-app") {
       return {
         type: "token",
@@ -163,7 +171,7 @@ async function waitForAccessToken(
         clientId: clientId,
         token: data.access_token,
         scopes: data.scope.split(/,\s*/).filter(Boolean),
-      };
+      } as Authentication<TClientType>;
     }
 
     if ("refresh_token" in data) {
@@ -181,7 +189,7 @@ async function waitForAccessToken(
           apiTimeInMs,
           data.refresh_token_expires_in
         ),
-      };
+      } as Authentication<TClientType>;
     }
 
     return {
@@ -190,17 +198,29 @@ async function waitForAccessToken(
       clientType: "github-app",
       clientId: clientId,
       token: data.access_token,
-    };
+    } as Authentication<TClientType>;
   }
 
   if (data.error === "authorization_pending") {
     await wait(verification.interval);
-    return waitForAccessToken(request, baseUrl, clientId, verification);
+    return waitForAccessToken<TClientType>(
+      request,
+      baseUrl,
+      clientId,
+      clientType,
+      verification
+    );
   }
 
   if (data.error === "slow_down") {
     await wait(verification.interval + 5);
-    return waitForAccessToken(request, baseUrl, clientId, verification);
+    return waitForAccessToken<TClientType>(
+      request,
+      baseUrl,
+      clientId,
+      clientType,
+      verification
+    );
   }
 
   throw new RequestError(

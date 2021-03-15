@@ -122,7 +122,6 @@ test("README example for GitHub App with expiring tokens disabled", async () => 
         },
         body: {
           client_id: "lv1.1234567890abcdef",
-          scope: "",
         },
       }
     )
@@ -175,7 +174,7 @@ test("README example for GitHub App with expiring tokens disabled", async () => 
 
   const onVerification = jest.fn();
   const auth = createOAuthDeviceAuth({
-    // "lv1." prefix only exists for GitHub Apps
+    clientType: "github-app",
     clientId: "lv1.1234567890abcdef",
     onVerification,
     request: request.defaults({
@@ -225,7 +224,6 @@ test("README example for GitHub App with expiring tokens enabled", async () => {
         },
         body: {
           client_id: "lv1.1234567890abcdef",
-          scope: "",
         },
       }
     )
@@ -281,7 +279,7 @@ test("README example for GitHub App with expiring tokens enabled", async () => {
 
   const onVerification = jest.fn();
   const auth = createOAuthDeviceAuth({
-    // "lv1." prefix only exists for GitHub Apps
+    clientType: "github-app",
     clientId: "lv1.1234567890abcdef",
     onVerification,
     request: request.defaults({
@@ -727,7 +725,6 @@ test("does not refresh token for GitHub Apps", async () => {
         },
         body: {
           client_id: "lv1.1234567890abcdef",
-          scope: "",
         },
       }
     )
@@ -798,6 +795,7 @@ test("does not refresh token for GitHub Apps", async () => {
     );
 
   const auth = createOAuthDeviceAuth({
+    clientType: "github-app",
     clientId: "lv1.1234567890abcdef",
     onVerification: jest.fn(),
     request: request.defaults({
