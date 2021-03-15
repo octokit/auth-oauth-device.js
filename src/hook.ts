@@ -7,10 +7,10 @@ import {
 } from "@octokit/types";
 
 import { getOAuthAccessToken } from "./get-oauth-access-token";
-import { State } from "./types";
+import { ClientType, State } from "./types";
 import { EndpointDefaults } from "@octokit/types";
 
-export async function hook(
+export async function hook<TClientType extends ClientType>(
   state: State,
   request: RequestInterface,
   route: Route | EndpointOptions,
@@ -26,7 +26,7 @@ export async function hook(
     return request(endpoint);
   }
 
-  const { token } = await getOAuthAccessToken(state, {
+  const { token } = await getOAuthAccessToken<TClientType>(state, {
     request,
     auth: { type: "oauth" },
   });

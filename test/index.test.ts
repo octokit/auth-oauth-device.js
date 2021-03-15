@@ -24,7 +24,7 @@ test("README example", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           scope: "",
         },
       }
@@ -43,7 +43,7 @@ test("README example", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -62,7 +62,7 @@ test("README example", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -72,7 +72,7 @@ test("README example", async () => {
 
   const onVerification = jest.fn();
   const auth = createOAuthDeviceAuth({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     onVerification,
     request: request.defaults({
       headers: {
@@ -89,7 +89,7 @@ test("README example", async () => {
   });
 
   expect(await authentication).toEqual({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     clientType: "oauth-app",
     type: "token",
     tokenType: "oauth",
@@ -121,8 +121,7 @@ test("README example for GitHub App with expiring tokens disabled", async () => 
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "lv1.123",
-          scope: "",
+          client_id: "lv1.1234567890abcdef",
         },
       }
     )
@@ -140,7 +139,7 @@ test("README example for GitHub App with expiring tokens disabled", async () => 
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "lv1.123",
+          client_id: "lv1.1234567890abcdef",
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -165,7 +164,7 @@ test("README example for GitHub App with expiring tokens disabled", async () => 
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "lv1.123",
+          client_id: "lv1.1234567890abcdef",
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -175,8 +174,8 @@ test("README example for GitHub App with expiring tokens disabled", async () => 
 
   const onVerification = jest.fn();
   const auth = createOAuthDeviceAuth({
-    // "lv1." prefix only exists for GitHub Apps
-    clientId: "lv1.123",
+    clientType: "github-app",
+    clientId: "lv1.1234567890abcdef",
     onVerification,
     request: request.defaults({
       headers: {
@@ -196,7 +195,7 @@ test("README example for GitHub App with expiring tokens disabled", async () => 
     type: "token",
     tokenType: "oauth",
     clientType: "github-app",
-    clientId: "lv1.123",
+    clientId: "lv1.1234567890abcdef",
     token: "token123",
   });
 
@@ -224,8 +223,7 @@ test("README example for GitHub App with expiring tokens enabled", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "lv1.123",
-          scope: "",
+          client_id: "lv1.1234567890abcdef",
         },
       }
     )
@@ -243,7 +241,7 @@ test("README example for GitHub App with expiring tokens enabled", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "lv1.123",
+          client_id: "lv1.1234567890abcdef",
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -271,7 +269,7 @@ test("README example for GitHub App with expiring tokens enabled", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "lv1.123",
+          client_id: "lv1.1234567890abcdef",
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -281,8 +279,8 @@ test("README example for GitHub App with expiring tokens enabled", async () => {
 
   const onVerification = jest.fn();
   const auth = createOAuthDeviceAuth({
-    // "lv1." prefix only exists for GitHub Apps
-    clientId: "lv1.123",
+    clientType: "github-app",
+    clientId: "lv1.1234567890abcdef",
     onVerification,
     request: request.defaults({
       headers: {
@@ -302,7 +300,7 @@ test("README example for GitHub App with expiring tokens enabled", async () => {
     type: "token",
     tokenType: "oauth",
     clientType: "github-app",
-    clientId: "lv1.123",
+    clientId: "lv1.1234567890abcdef",
     token: "token123",
     expiresAt: "1970-01-01T08:00:00.000Z",
     refreshToken: "r1.token123",
@@ -330,14 +328,14 @@ test("Request for user/device code fails", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           scope: "",
         },
       }
     );
 
   const auth = createOAuthDeviceAuth({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     onVerification: jest.fn(),
     request: request.defaults({
       headers: {
@@ -377,7 +375,7 @@ test("Caches token", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           scope: "",
         },
       }
@@ -395,7 +393,7 @@ test("Caches token", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -404,7 +402,7 @@ test("Caches token", async () => {
     );
 
   const auth = createOAuthDeviceAuth({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     onVerification: jest.fn(),
     request: request.defaults({
       headers: {
@@ -421,7 +419,7 @@ test("Caches token", async () => {
   });
 
   expect(authentication1).toEqual({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     clientType: "oauth-app",
     type: "token",
     tokenType: "oauth",
@@ -458,7 +456,7 @@ test("auth({ refresh: true })", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           scope: "",
         },
       }
@@ -476,7 +474,7 @@ test("auth({ refresh: true })", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -502,7 +500,7 @@ test("auth({ refresh: true })", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           scope: "",
         },
         overwriteRoutes: false,
@@ -521,7 +519,7 @@ test("auth({ refresh: true })", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           device_code: "devicecode456",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -530,7 +528,7 @@ test("auth({ refresh: true })", async () => {
     );
 
   const auth = createOAuthDeviceAuth({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     onVerification: jest.fn(),
     request: request.defaults({
       headers: {
@@ -547,7 +545,7 @@ test("auth({ refresh: true })", async () => {
   });
 
   expect(authentication1).toEqual({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     clientType: "oauth-app",
     type: "token",
     tokenType: "oauth",
@@ -561,7 +559,7 @@ test("auth({ refresh: true })", async () => {
   });
 
   expect(authentication2).toEqual({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     clientType: "oauth-app",
     type: "token",
     tokenType: "oauth",
@@ -592,7 +590,7 @@ test("refreshes token for different scopes", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           scope: "",
         },
       }
@@ -610,7 +608,7 @@ test("refreshes token for different scopes", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -636,7 +634,7 @@ test("refreshes token for different scopes", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           scope: "repo",
         },
         overwriteRoutes: false,
@@ -655,7 +653,7 @@ test("refreshes token for different scopes", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           device_code: "devicecode456",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -664,7 +662,7 @@ test("refreshes token for different scopes", async () => {
     );
 
   const auth = createOAuthDeviceAuth({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     onVerification: jest.fn(),
     request: request.defaults({
       headers: {
@@ -681,7 +679,7 @@ test("refreshes token for different scopes", async () => {
   });
 
   expect(authentication1).toEqual({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     clientType: "oauth-app",
     type: "token",
     tokenType: "oauth",
@@ -695,7 +693,7 @@ test("refreshes token for different scopes", async () => {
   });
 
   expect(authentication2).toEqual({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     clientType: "oauth-app",
     type: "token",
     tokenType: "oauth",
@@ -726,8 +724,7 @@ test("does not refresh token for GitHub Apps", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "lv1.123",
-          scope: "",
+          client_id: "lv1.1234567890abcdef",
         },
       }
     )
@@ -744,7 +741,7 @@ test("does not refresh token for GitHub Apps", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "lv1.123",
+          client_id: "lv1.1234567890abcdef",
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -770,7 +767,7 @@ test("does not refresh token for GitHub Apps", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "lv1.123",
+          client_id: "lv1.1234567890abcdef",
           scope: "repo",
         },
         overwriteRoutes: false,
@@ -789,7 +786,7 @@ test("does not refresh token for GitHub Apps", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "lv1.123",
+          client_id: "lv1.1234567890abcdef",
           device_code: "devicecode456",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -798,7 +795,8 @@ test("does not refresh token for GitHub Apps", async () => {
     );
 
   const auth = createOAuthDeviceAuth({
-    clientId: "lv1.123",
+    clientType: "github-app",
+    clientId: "lv1.1234567890abcdef",
     onVerification: jest.fn(),
     request: request.defaults({
       headers: {
@@ -815,7 +813,7 @@ test("does not refresh token for GitHub Apps", async () => {
   });
 
   expect(authentication1).toEqual({
-    clientId: "lv1.123",
+    clientId: "lv1.1234567890abcdef",
     clientType: "github-app",
     type: "token",
     tokenType: "oauth",
@@ -851,7 +849,7 @@ test("test with request instance that has custom baseUrl (GHE)", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           scope: "",
         },
       }
@@ -869,7 +867,7 @@ test("test with request instance that has custom baseUrl (GHE)", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -878,7 +876,7 @@ test("test with request instance that has custom baseUrl (GHE)", async () => {
     );
 
   const auth = createOAuthDeviceAuth({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     onVerification: jest.fn(),
     request: request.defaults({
       baseUrl: "https://github.acme-inc.com/api/v3",
@@ -894,7 +892,7 @@ test("test with request instance that has custom baseUrl (GHE)", async () => {
   const authentication = await auth({ type: "oauth" });
 
   expect(authentication).toEqual({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     clientType: "oauth-app",
     type: "token",
     tokenType: "oauth",
@@ -926,7 +924,7 @@ test("slow_down error", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           scope: "",
         },
       }
@@ -945,7 +943,7 @@ test("slow_down error", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -964,7 +962,7 @@ test("slow_down error", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -973,7 +971,7 @@ test("slow_down error", async () => {
     );
 
   const auth = createOAuthDeviceAuth({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     onVerification: jest.fn(),
     request: request.defaults({
       headers: {
@@ -990,7 +988,7 @@ test("slow_down error", async () => {
   });
 
   expect(await authentication).toEqual({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     clientType: "oauth-app",
     type: "token",
     tokenType: "oauth",
@@ -1022,7 +1020,7 @@ test("expired_token error", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           scope: "",
         },
       }
@@ -1041,7 +1039,7 @@ test("expired_token error", async () => {
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -1049,7 +1047,7 @@ test("expired_token error", async () => {
     );
 
   const auth = createOAuthDeviceAuth({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     onVerification: jest.fn(),
     request: request.defaults({
       headers: {
@@ -1087,7 +1085,7 @@ test("auth.hook() creates token and uses it for succeeding requests", async () =
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           scope: "",
         },
       }
@@ -1105,7 +1103,7 @@ test("auth.hook() creates token and uses it for succeeding requests", async () =
           "content-type": "application/json; charset=utf-8",
         },
         body: {
-          client_id: "123",
+          client_id: "1234567890abcdef1234",
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
@@ -1114,7 +1112,7 @@ test("auth.hook() creates token and uses it for succeeding requests", async () =
     )
     .get(
       "https://api.github.com/user",
-      { id: 123 },
+      { id: "1234567890abcdef1234" },
       {
         headers: {
           authorization: "token secret123",
@@ -1124,7 +1122,7 @@ test("auth.hook() creates token and uses it for succeeding requests", async () =
     );
 
   const auth = createOAuthDeviceAuth({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     onVerification: jest.fn(),
   });
 
@@ -1160,7 +1158,7 @@ test("auth.hook(request, 'POST https://github.com/login/oauth/access_token') doe
     });
 
   const auth = createOAuthDeviceAuth({
-    clientId: "123",
+    clientId: "1234567890abcdef1234",
     onVerification: jest.fn(),
   });
 
@@ -1199,7 +1197,7 @@ test("onVerification option not set", () => {
   expect(() =>
     // @ts-expect-error property 'onVerification' is missing
     createOAuthDeviceAuth({
-      clientId: "123",
+      clientId: "1234567890abcdef1234",
     })
   ).toThrow(
     `[@octokit/auth-oauth-device] "onVerification" option must be a function (https://github.com/octokit/auth-oauth-device.js#usage)`

@@ -6,15 +6,37 @@ import {
   OctokitResponse,
 } from "@octokit/types";
 
-export type StrategyOptions = {
+export type ClientType = "oauth-app" | "github-app";
+
+export type OAuthAppStrategyOptions<TClientType extends ClientType> = {
   clientId: string;
+
+  clientType?: TClientType;
   onVerification: OnVerificationCallback;
   scopes?: string[];
   request?: RequestInterface;
 };
 
-export interface AuthInterface {
-  (options: AuthOptions): Promise<Authentication>;
+export type GitHubAppStrategyOptions<TClientType extends ClientType> = {
+  clientId: string;
+
+  clientType: TClientType;
+  onVerification: OnVerificationCallback;
+  /** `scopes` are not permitted for GitHub Apps */
+  scopes?: never;
+  request?: RequestInterface;
+};
+
+export type StrategyOptions<
+  TClientType extends ClientType = "oauth-app"
+> = TClientType extends "oauth-app"
+  ? OAuthAppStrategyOptions<TClientType>
+  : TClientType extends "github-app"
+  ? GitHubAppStrategyOptions<TClientType>
+  : never;
+
+export interface AuthInterface<TClientType extends ClientType> {
+  (options: AuthOptions): Promise<Authentication<TClientType>>;
 
   hook(
     request: RequestInterface,
@@ -57,10 +79,13 @@ export type GitHubAppAuthenticationWithExpiration = {
   refreshTokenExpiresAt: string;
 };
 
-export type Authentication =
-  | OAuthAppAuthentication
-  | GitHubAppAuthentication
-  | GitHubAppAuthenticationWithExpiration;
+export type Authentication<
+  TClientType extends ClientType = "oauth-app"
+> = TClientType extends "oauth-app"
+  ? OAuthAppAuthentication
+  : TClientType extends "github-app"
+  ? GitHubAppAuthentication | GitHubAppAuthenticationWithExpiration
+  : never;
 
 export type Verification = {
   device_code: string;
@@ -74,13 +99,23 @@ export type OnVerificationCallback = (
   verification: Verification
 ) => any | Promise<any>;
 
-export type State = {
+export type OAuthAppState = {
   clientId: string;
+  clientType: "oauth-app";
   onVerification: OnVerificationCallback;
   scopes: string[];
   request: RequestInterface;
-  authentication?: Authentication;
+  authentication?: Authentication<"oauth-app">;
 };
+export type GitHubAppState = {
+  clientId: string;
+  clientType: "github-app";
+  onVerification: OnVerificationCallback;
+  request: RequestInterface;
+  authentication?: Authentication<"github-app">;
+};
+
+export type State = OAuthAppState | GitHubAppState;
 
 export type CodeExchangeResponseError =
   | "authorization_pending"
