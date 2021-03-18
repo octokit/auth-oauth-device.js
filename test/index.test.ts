@@ -351,7 +351,7 @@ test("Request for user/device code fails", async () => {
     auth({
       type: "oauth",
     })
-  ).rejects.toThrow("error_description (some_error)");
+  ).rejects.toThrow("error_description (some_error, error_url)");
 });
 
 test("Caches token", async () => {

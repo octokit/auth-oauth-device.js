@@ -26,7 +26,6 @@ export async function hook(
     return request(endpoint);
   }
 
-  // @ts-expect-error looks like TypeScript cannot handle the different OAuth App/GitHub App paths here
   const { token } = await getOAuthAccessToken(state, {
     request,
     auth: { type: "oauth" },

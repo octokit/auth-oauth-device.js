@@ -6,6 +6,8 @@ import {
   OctokitResponse,
 } from "@octokit/types";
 
+import * as OAuthMethodsTypes from "@octokit/oauth-methods";
+
 export type ClientType = "oauth-app" | "github-app";
 
 export type OAuthAppStrategyOptions = {
@@ -61,30 +63,17 @@ export type GitHubAppAuthOptions = {
 export type OAuthAppAuthentication = {
   type: "token";
   tokenType: "oauth";
-  clientType: "oauth-app";
-  clientId: string;
-  token: string;
-  scopes: string[];
-};
+} & Omit<OAuthMethodsTypes.OAuthAppAuthentication, "clientSecret">;
 
 export type GitHubAppAuthentication = {
   type: "token";
   tokenType: "oauth";
-  clientType: "github-app";
-  clientId: string;
-  token: string;
-};
+} & Omit<OAuthMethodsTypes.GitHubAppAuthentication, "clientSecret">;
 
 export type GitHubAppAuthenticationWithExpiration = {
   type: "token";
   tokenType: "oauth";
-  clientType: "github-app";
-  clientId: string;
-  token: string;
-  refreshToken: string;
-  expiresAt: string;
-  refreshTokenExpiresAt: string;
-};
+} & Omit<OAuthMethodsTypes.GitHubAppAuthentication, "clientSecret">;
 
 export type Verification = {
   device_code: string;
@@ -115,12 +104,3 @@ export type GitHubAppState = {
     | GitHubAppAuthentication
     | GitHubAppAuthenticationWithExpiration;
 };
-
-export type CodeExchangeResponseError =
-  | "authorization_pending"
-  | "slow_down"
-  | "expired_token"
-  | "unsupported_grant_type"
-  | "incorrect_client_credentials"
-  | "incorrect_device_code"
-  | "access_denied";
