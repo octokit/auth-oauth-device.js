@@ -71,7 +71,7 @@ export function createOAuthDeviceAuth(
     );
   }
 
-  // @ts-expect-error looks like TypeScript cannot handle the different OAuth App/GitHub App paths here
+  // @ts-ignore too much for tsc / ts-jest ¯\_(ツ)_/¯
   return Object.assign(auth.bind(null, state), {
     hook: hook.bind(null, state),
   });
