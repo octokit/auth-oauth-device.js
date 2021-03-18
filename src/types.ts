@@ -8,35 +8,25 @@ import {
 
 export type ClientType = "oauth-app" | "github-app";
 
-export type OAuthAppStrategyOptions<TClientType extends ClientType> = {
+export type OAuthAppStrategyOptions = {
   clientId: string;
 
-  clientType?: TClientType;
+  clientType?: "oauth-app";
   onVerification: OnVerificationCallback;
   scopes?: string[];
   request?: RequestInterface;
 };
 
-export type GitHubAppStrategyOptions<TClientType extends ClientType> = {
+export type GitHubAppStrategyOptions = {
   clientId: string;
 
-  clientType: TClientType;
+  clientType: "github-app";
   onVerification: OnVerificationCallback;
-  /** `scopes` are not permitted for GitHub Apps */
-  scopes?: never;
   request?: RequestInterface;
 };
 
-export type StrategyOptions<
-  TClientType extends ClientType = "oauth-app"
-> = TClientType extends "oauth-app"
-  ? OAuthAppStrategyOptions<TClientType>
-  : TClientType extends "github-app"
-  ? GitHubAppStrategyOptions<TClientType>
-  : never;
-
-export interface AuthInterface<TClientType extends ClientType> {
-  (options: AuthOptions): Promise<Authentication<TClientType>>;
+export interface OAuthAppAuthInterface {
+  (options: OAuthAppAuthOptions): Promise<OAuthAppAuthentication>;
 
   hook(
     request: RequestInterface,
@@ -45,9 +35,26 @@ export interface AuthInterface<TClientType extends ClientType> {
   ): Promise<OctokitResponse<any>>;
 }
 
-export type AuthOptions = {
+export interface GitHubAppAuthInterface {
+  (options: GitHubAppAuthOptions): Promise<
+    GitHubAppAuthentication | GitHubAppAuthenticationWithExpiration
+  >;
+
+  hook(
+    request: RequestInterface,
+    route: Route | EndpointOptions,
+    parameters?: RequestParameters
+  ): Promise<OctokitResponse<any>>;
+}
+
+export type OAuthAppAuthOptions = {
   type: "oauth";
   scopes?: string[];
+  refresh?: boolean;
+};
+
+export type GitHubAppAuthOptions = {
+  type: "oauth";
   refresh?: boolean;
 };
 
@@ -66,8 +73,6 @@ export type GitHubAppAuthentication = {
   clientType: "github-app";
   clientId: string;
   token: string;
-  /** GitHub apps do not support scopes */
-  scopes: never;
 };
 
 export type GitHubAppAuthenticationWithExpiration = {
@@ -79,17 +84,7 @@ export type GitHubAppAuthenticationWithExpiration = {
   refreshToken: string;
   expiresAt: string;
   refreshTokenExpiresAt: string;
-  /** GitHub apps do not support scopes */
-  scopes: never;
 };
-
-export type Authentication<
-  TClientType extends ClientType = "oauth-app"
-> = TClientType extends "oauth-app"
-  ? OAuthAppAuthentication
-  : TClientType extends "github-app"
-  ? GitHubAppAuthentication | GitHubAppAuthenticationWithExpiration
-  : never;
 
 export type Verification = {
   device_code: string;
@@ -109,17 +104,17 @@ export type OAuthAppState = {
   onVerification: OnVerificationCallback;
   scopes: string[];
   request: RequestInterface;
-  authentication?: Authentication<"oauth-app">;
+  authentication?: OAuthAppAuthentication;
 };
 export type GitHubAppState = {
   clientId: string;
   clientType: "github-app";
   onVerification: OnVerificationCallback;
   request: RequestInterface;
-  authentication?: Authentication<"github-app">;
+  authentication?:
+    | GitHubAppAuthentication
+    | GitHubAppAuthenticationWithExpiration;
 };
-
-export type State = OAuthAppState | GitHubAppState;
 
 export type CodeExchangeResponseError =
   | "authorization_pending"

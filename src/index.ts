@@ -1,31 +1,40 @@
 import { getUserAgent } from "universal-user-agent";
 import { request as octokitRequest } from "@octokit/request";
-import {
-  RequestInterface,
-  EndpointOptions,
-  RequestParameters,
-  Route,
-} from "@octokit/types";
 
 import { auth } from "./auth";
 import { hook } from "./hook";
-import * as Types from "./types";
+import {
+  GitHubAppAuthInterface,
+  GitHubAppState,
+  GitHubAppStrategyOptions,
+  OAuthAppAuthInterface,
+  OAuthAppState,
+  OAuthAppStrategyOptions,
+} from "./types";
 import { VERSION } from "./version";
 
+// Remember to update README.md#Types when changing exports
 export {
-  StrategyOptions,
-  AuthOptions,
-  Authentication,
+  OAuthAppStrategyOptions,
+  OAuthAppAuthOptions,
   OAuthAppAuthentication,
+  GitHubAppStrategyOptions,
+  GitHubAppAuthOptions,
   GitHubAppAuthentication,
   GitHubAppAuthenticationWithExpiration,
 } from "./types";
 
-export function createOAuthDeviceAuth<
-  TClientType extends Types.ClientType = "oauth-app"
->(
-  options: Types.StrategyOptions<TClientType>
-): Types.AuthInterface<TClientType> {
+export function createOAuthDeviceAuth(
+  options: OAuthAppStrategyOptions
+): OAuthAppAuthInterface;
+
+export function createOAuthDeviceAuth(
+  options: GitHubAppStrategyOptions
+): GitHubAppAuthInterface;
+
+export function createOAuthDeviceAuth(
+  options: OAuthAppStrategyOptions | GitHubAppStrategyOptions
+): OAuthAppAuthInterface | GitHubAppAuthInterface {
   const requestWithDefaults =
     options.request ||
     octokitRequest.defaults({
@@ -34,25 +43,20 @@ export function createOAuthDeviceAuth<
       },
     });
 
-  const {
-    request = requestWithDefaults,
-    clientType = "oauth-app",
-    scopes = [],
-    ...otherOptions
-  } = options;
+  const { request = requestWithDefaults, ...otherOptions } = options;
 
-  const state: Types.State =
-    clientType === "github-app"
+  const state: OAuthAppState | GitHubAppState =
+    options.clientType === "github-app"
       ? {
-          clientType,
-          request,
           ...otherOptions,
+          clientType: "github-app",
+          request,
         }
       : {
-          clientType,
-          request,
-          scopes,
           ...otherOptions,
+          clientType: "oauth-app",
+          request,
+          scopes: options.scopes || [],
         };
 
   if (!options.clientId) {
@@ -67,14 +71,8 @@ export function createOAuthDeviceAuth<
     );
   }
 
-  return Object.assign(
-    (options: Types.AuthOptions) => auth<TClientType>(state, options),
-    {
-      hook: (
-        request: RequestInterface,
-        route: Route | EndpointOptions,
-        parameters: RequestParameters
-      ) => hook(state, request, route, parameters),
-    }
-  );
+  // @ts-expect-error looks like TypeScript cannot handle the different OAuth App/GitHub App paths here
+  return Object.assign(auth.bind(null, state), {
+    hook: hook.bind(null, state),
+  });
 }

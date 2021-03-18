@@ -291,6 +291,8 @@ The async `auth()` method returned by `createOAuthDeviceAuth(options)` accepts t
       </th>
       <td>
 
+Only relevant if the `clientType` strategy options was set to `"oauth-app"`
+
 Array of scope names enabled for the token. Defaults to what was set in the [strategy options](#createoauthdeviceauthoptions). See <a href="https://docs.github.com/en/developers/apps/scopes-for-oauth-apps#available-scopes">available scopes</a>
 
 </td>
@@ -621,10 +623,11 @@ const { data: user } = await requestWithAuth("GET /user");
 
 ```ts
 import {
-  StrategyOptions,
-  AuthOptions,
-  Authentication,
+  OAuthAppStrategyOptions,
+  OAuthAppAuthOptions,
   OAuthAppAuthentication,
+  GitHubAppStrategyOptions,
+  GitHubAppAuthOptions,
   GitHubAppAuthentication,
   GitHubAppAuthenticationWithExpiration,
 } from "@octokit/auth-oauth-device";

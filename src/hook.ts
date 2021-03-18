@@ -7,11 +7,11 @@ import {
 } from "@octokit/types";
 
 import { getOAuthAccessToken } from "./get-oauth-access-token";
-import { ClientType, State } from "./types";
+import { OAuthAppState, GitHubAppState } from "./types";
 import { EndpointDefaults } from "@octokit/types";
 
-export async function hook<TClientType extends ClientType>(
-  state: State,
+export async function hook(
+  state: OAuthAppState | GitHubAppState,
   request: RequestInterface,
   route: Route | EndpointOptions,
   parameters?: RequestParameters
@@ -26,7 +26,8 @@ export async function hook<TClientType extends ClientType>(
     return request(endpoint);
   }
 
-  const { token } = await getOAuthAccessToken<TClientType>(state, {
+  // @ts-expect-error looks like TypeScript cannot handle the different OAuth App/GitHub App paths here
+  const { token } = await getOAuthAccessToken(state, {
     request,
     auth: { type: "oauth" },
   });
