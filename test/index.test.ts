@@ -822,7 +822,6 @@ test("does not refresh token for GitHub Apps", async () => {
 
   const authentication2 = await auth({
     type: "oauth",
-    scopes: ["repo"],
   });
 
   expect(authentication2).toEqual(authentication1);

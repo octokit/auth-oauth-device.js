@@ -2,25 +2,43 @@ import { RequestError } from "@octokit/request-error";
 import { RequestInterface } from "@octokit/types";
 
 import {
-  AuthOptions,
-  ClientType,
-  State,
-  Authentication,
+  OAuthAppState,
+  GitHubAppState,
+  OAuthAppAuthOptions,
+  GitHubAppAuthOptions,
+  OAuthAppAuthentication,
+  GitHubAppAuthentication,
   Verification,
   CodeExchangeResponseError,
+  ClientType,
+  GitHubAppAuthenticationWithExpiration,
 } from "./types";
 
-export async function getOAuthAccessToken<TClientType extends ClientType>(
-  state: State,
+export async function getOAuthAccessToken(
+  state: OAuthAppState,
   options: {
     request?: RequestInterface;
-    auth: AuthOptions;
+    auth: OAuthAppAuthOptions;
   }
-): Promise<Authentication<TClientType>> {
-  const cachedAuthentication = getCachedAuthentication<TClientType>(
-    state,
-    options.auth
-  );
+): Promise<OAuthAppAuthentication>;
+
+export async function getOAuthAccessToken(
+  state: GitHubAppState,
+  options: {
+    request?: RequestInterface;
+    auth: GitHubAppAuthOptions;
+  }
+): Promise<GitHubAppAuthentication>;
+
+export async function getOAuthAccessToken(
+  state: OAuthAppState | GitHubAppState,
+  options: {
+    request?: RequestInterface;
+    auth: OAuthAppAuthOptions | GitHubAppAuthOptions;
+  }
+): Promise<OAuthAppAuthentication | GitHubAppAuthentication> {
+  // @ts-expect-error looks like TypeScript cannot handle the different OAuth App/GitHub App paths here
+  const cachedAuthentication = getCachedAuthentication(state, options.auth);
 
   if (cachedAuthentication) return cachedAuthentication;
 
@@ -37,7 +55,12 @@ export async function getOAuthAccessToken<TClientType extends ClientType>(
   // https://docs.github.com/en/developers/apps/authorizing-oauth-apps#step-1-app-requests-the-device-and-user-verification-codes-from-github
   const scope =
     "scopes" in state
-      ? { scope: (options.auth.scopes || state.scopes).join(" ") }
+      ? {
+          scope: (
+            ("scopes" in options.auth && options.auth.scopes) ||
+            state.scopes
+          ).join(" "),
+        }
       : {};
   const parameters = {
     baseUrl,
@@ -71,7 +94,7 @@ export async function getOAuthAccessToken<TClientType extends ClientType>(
 
   // Step 3: Exchange device code for access token
   // See https://docs.github.com/en/developers/apps/authorizing-oauth-apps#step-3-app-polls-github-to-check-if-the-user-authorized-the-device
-  const authentication = await waitForAccessToken<TClientType>(
+  const authentication = await waitForAccessToken(
     request,
     baseUrl,
     state.clientId,
@@ -84,24 +107,34 @@ export async function getOAuthAccessToken<TClientType extends ClientType>(
   return authentication;
 }
 
-function getCachedAuthentication<TClientType extends ClientType>(
-  state: State,
-  auth: AuthOptions
-): Authentication<TClientType> | false {
+function getCachedAuthentication(
+  state: OAuthAppState,
+  auth: OAuthAppAuthOptions
+): OAuthAppAuthentication | false;
+
+function getCachedAuthentication(
+  state: GitHubAppState,
+  auth: GitHubAppAuthOptions
+): GitHubAppAuthentication | false;
+
+function getCachedAuthentication(
+  state: OAuthAppState | GitHubAppState,
+  auth: OAuthAppAuthOptions | GitHubAppAuthOptions
+): OAuthAppAuthentication | GitHubAppAuthentication | false {
   if (auth.refresh === true) return false;
   if (!state.authentication) return false;
 
   if (state.clientType === "github-app") {
-    return state.authentication as Authentication<TClientType>;
+    return state.authentication;
   }
 
-  const authentication = state.authentication as Authentication<"oauth-app">;
-  const newScope = (auth.scopes || state.scopes).join(" ");
+  const authentication = state.authentication;
+  const newScope = (("scopes" in auth && auth.scopes) || state.scopes).join(
+    " "
+  );
   const currentScope = authentication.scopes.join(" ");
 
-  return newScope === currentScope
-    ? (authentication as Authentication<TClientType>)
-    : false;
+  return newScope === currentScope ? authentication : false;
 }
 
 type OAuthResponseDataForOAuthApps = {
@@ -141,13 +174,17 @@ async function wait(seconds: number) {
   await new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
 
-async function waitForAccessToken<TClientType extends ClientType>(
+async function waitForAccessToken(
   request: RequestInterface,
   baseUrl: string,
   clientId: string,
   clientType: ClientType,
   verification: Verification
-): Promise<Authentication<TClientType>> {
+): Promise<
+  | OAuthAppAuthentication
+  | GitHubAppAuthentication
+  | GitHubAppAuthenticationWithExpiration
+> {
   const requestOptions = {
     baseUrl,
     method: "POST",
@@ -171,7 +208,7 @@ async function waitForAccessToken<TClientType extends ClientType>(
         clientId: clientId,
         token: data.access_token,
         scopes: data.scope.split(/,\s*/).filter(Boolean),
-      } as Authentication<TClientType>;
+      };
     }
 
     if ("refresh_token" in data) {
@@ -189,7 +226,7 @@ async function waitForAccessToken<TClientType extends ClientType>(
           apiTimeInMs,
           data.refresh_token_expires_in
         ),
-      } as Authentication<TClientType>;
+      };
     }
 
     return {
@@ -198,12 +235,12 @@ async function waitForAccessToken<TClientType extends ClientType>(
       clientType: "github-app",
       clientId: clientId,
       token: data.access_token,
-    } as Authentication<TClientType>;
+    };
   }
 
   if (data.error === "authorization_pending") {
     await wait(verification.interval);
-    return waitForAccessToken<TClientType>(
+    return waitForAccessToken(
       request,
       baseUrl,
       clientId,
@@ -214,7 +251,7 @@ async function waitForAccessToken<TClientType extends ClientType>(
 
   if (data.error === "slow_down") {
     await wait(verification.interval + 5);
-    return waitForAccessToken<TClientType>(
+    return waitForAccessToken(
       request,
       baseUrl,
       clientId,
