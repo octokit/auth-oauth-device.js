@@ -34,7 +34,7 @@ test("README example", async () => {
       {
         error: "authorization_pending",
         error_description: "error_description",
-        error_url: "error_url",
+        error_uri: "error_url",
       },
       {
         headers: {
@@ -130,7 +130,7 @@ test("README example for GitHub App with expiring tokens disabled", async () => 
       {
         error: "authorization_pending",
         error_description: "error_description",
-        error_url: "error_url",
+        error_uri: "error_url",
       },
       {
         headers: {
@@ -232,7 +232,7 @@ test("README example for GitHub App with expiring tokens enabled", async () => {
       {
         error: "authorization_pending",
         error_description: "error_description",
-        error_url: "error_url",
+        error_uri: "error_url",
       },
       {
         headers: {
@@ -319,7 +319,7 @@ test("Request for user/device code fails", async () => {
       {
         error: "some_error",
         error_description: "error_description",
-        error_url: "error_url",
+        error_uri: "error_url",
       },
       {
         headers: {
@@ -933,7 +933,7 @@ test("slow_down error", async () => {
       {
         error: "slow_down",
         error_description: "error_description",
-        error_url: "error_url",
+        error_uri: "error_url",
       },
       {
         headers: {
@@ -1029,7 +1029,7 @@ test("expired_token error", async () => {
       {
         error: "expired_token",
         error_description: "error_description",
-        error_url: "error_url",
+        error_uri: "error_url",
       },
       {
         headers: {
