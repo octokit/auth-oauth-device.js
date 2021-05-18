@@ -67,6 +67,7 @@ const { createOAuthDeviceAuth } = require("@octokit/auth-oauth-device");
 const auth = createOAuthDeviceAuth({
   clientType: "oauth-app",
   clientId: "1234567890abcdef1234",
+  scopes: ["public_repo"],
   onVerification(verification) {
     // verification example
     // {
