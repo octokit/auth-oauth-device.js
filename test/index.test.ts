@@ -901,8 +901,6 @@ test("test with request instance that has custom baseUrl (GHE)", async () => {
 });
 
 test("slow_down error", async () => {
-  jest.setTimeout(10000);
-
   const mock = fetchMock
     .sandbox()
 
@@ -994,11 +992,9 @@ test("slow_down error", async () => {
     token: "secret123",
     scopes: [],
   });
-});
+}, 10000);
 
 test("expired_token error", async () => {
-  jest.setTimeout(10000);
-
   const mock = fetchMock
     .sandbox()
 
@@ -1061,7 +1057,7 @@ test("expired_token error", async () => {
   await expect(async () => await auth({ type: "oauth" })).rejects.toThrow(
     "error_description (expired_token, error_url)"
   );
-});
+}, 10000);
 
 test("auth.hook() creates token and uses it for succeeding requests", async () => {
   const mock = fetchMock
