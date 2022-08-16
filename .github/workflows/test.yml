@@ -29,6 +29,7 @@ jobs:
         run: npm test --ignore-scripts # run lint only once
   test:
     runs-on: ubuntu-latest
+    if: ${{ always() }}
     needs: test_matrix
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
