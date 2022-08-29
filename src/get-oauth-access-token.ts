@@ -112,8 +112,10 @@ async function waitForAccessToken(
     };
   } catch (error) {
     // istanbul ignore if
+    // @ts-ignore
     if (!error.response) throw error;
 
+    // @ts-ignore
     const errorType = error.response.data.error;
 
     if (errorType === "authorization_pending") {
