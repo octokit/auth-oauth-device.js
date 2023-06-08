@@ -1,7 +1,7 @@
-import { RequestInterface } from "@octokit/types";
+import type { RequestInterface } from "@octokit/types";
 import { createDeviceCode, exchangeDeviceCode } from "@octokit/oauth-methods";
 
-import {
+import type {
   OAuthAppState,
   GitHubAppState,
   OAuthAppAuthOptions,

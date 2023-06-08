@@ -1,4 +1,4 @@
-import {
+import type {
   RequestInterface,
   OctokitResponse,
   EndpointOptions,
@@ -7,8 +7,8 @@ import {
 } from "@octokit/types";
 
 import { getOAuthAccessToken } from "./get-oauth-access-token";
-import { OAuthAppState, GitHubAppState } from "./types";
-import { EndpointDefaults } from "@octokit/types";
+import type { OAuthAppState, GitHubAppState } from "./types";
+import type { EndpointDefaults } from "@octokit/types";
 
 export async function hook(
   state: OAuthAppState | GitHubAppState,
