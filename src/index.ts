@@ -3,7 +3,7 @@ import { request as octokitRequest } from "@octokit/request";
 
 import { auth } from "./auth";
 import { hook } from "./hook";
-import {
+import type {
   GitHubAppAuthInterface,
   GitHubAppState,
   GitHubAppStrategyOptions,
@@ -14,7 +14,7 @@ import {
 import { VERSION } from "./version";
 
 // Remember to update README.md#Types when changing exports
-export {
+export type {
   OAuthAppStrategyOptions,
   OAuthAppAuthOptions,
   OAuthAppAuthentication,

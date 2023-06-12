@@ -1,5 +1,5 @@
 import { getOAuthAccessToken } from "./get-oauth-access-token";
-import {
+import type {
   OAuthAppAuthOptions,
   GitHubAppAuthOptions,
   OAuthAppAuthentication,
