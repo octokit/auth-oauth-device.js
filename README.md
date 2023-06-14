@@ -36,11 +36,11 @@ Browsers
 
 </th><td width=100%>
 
-Load `@octokit/auth-oauth-device` directly from [cdn.pika.dev](https://cdn.pika.dev)
+Load `@octokit/auth-oauth-device` directly from [esm.sh](https://esm.sh)
 
 ```html
 <script type="module">
-  import { createOAuthDeviceAuth } from "https://cdn.pika.dev/@octokit/auth-oauth-device";
+  import { createOAuthDeviceAuth } from "https://esm.sh/@octokit/auth-oauth-device";
 </script>
 ```
 
