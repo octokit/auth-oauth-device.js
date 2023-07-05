@@ -18,7 +18,7 @@ export async function getOAuthAccessToken(
   options: {
     request?: RequestInterface;
     auth: OAuthAppAuthOptions | GitHubAppAuthOptions;
-  }
+  },
 ): Promise<OAuthAppAuthentication | GitHubAppAuthentication> {
   const cachedAuthentication = getCachedAuthentication(state, options.auth);
 
@@ -44,7 +44,7 @@ export async function getOAuthAccessToken(
     options.request || state.request,
     state.clientId,
     state.clientType,
-    verification
+    verification,
   );
 
   state.authentication = authentication;
@@ -54,7 +54,7 @@ export async function getOAuthAccessToken(
 
 function getCachedAuthentication(
   state: OAuthAppState | GitHubAppState,
-  auth: OAuthAppAuthOptions | GitHubAppAuthOptions
+  auth: OAuthAppAuthOptions | GitHubAppAuthOptions,
 ): OAuthAppAuthentication | GitHubAppAuthentication | false {
   if (auth.refresh === true) return false;
   if (!state.authentication) return false;
@@ -65,7 +65,7 @@ function getCachedAuthentication(
 
   const authentication = state.authentication;
   const newScope = (("scopes" in auth && auth.scopes) || state.scopes).join(
-    " "
+    " ",
   );
   const currentScope = authentication.scopes.join(" ");
 
@@ -80,7 +80,7 @@ async function waitForAccessToken(
   request: RequestInterface,
   clientId: string,
   clientType: ClientType,
-  verification: Verification
+  verification: Verification,
 ): Promise<
   | OAuthAppAuthentication
   | GitHubAppAuthentication

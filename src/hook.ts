@@ -14,11 +14,11 @@ export async function hook(
   state: OAuthAppState | GitHubAppState,
   request: RequestInterface,
   route: Route | EndpointOptions,
-  parameters?: RequestParameters
+  parameters?: RequestParameters,
 ): Promise<OctokitResponse<any>> {
   let endpoint = request.endpoint.merge(
     route as string,
-    parameters
+    parameters,
   ) as EndpointDefaults & { url: string };
 
   // Do not intercept request to retrieve codes or token

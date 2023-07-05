@@ -27,7 +27,7 @@ test("README example", async () => {
           client_id: "1234567890abcdef1234",
           scope: "",
         },
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -47,7 +47,7 @@ test("README example", async () => {
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -67,7 +67,7 @@ test("README example", async () => {
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
         overwriteRoutes: false,
-      }
+      },
     );
 
   const onVerification = jest.fn();
@@ -123,7 +123,7 @@ test("README example for GitHub App with expiring tokens disabled", async () => 
         body: {
           client_id: "lv1.1234567890abcdef",
         },
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -143,7 +143,7 @@ test("README example for GitHub App with expiring tokens disabled", async () => 
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -169,7 +169,7 @@ test("README example for GitHub App with expiring tokens disabled", async () => 
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
         overwriteRoutes: false,
-      }
+      },
     );
 
   const onVerification = jest.fn();
@@ -225,7 +225,7 @@ test("README example for GitHub App with expiring tokens enabled", async () => {
         body: {
           client_id: "lv1.1234567890abcdef",
         },
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -245,7 +245,7 @@ test("README example for GitHub App with expiring tokens enabled", async () => {
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -274,7 +274,7 @@ test("README example for GitHub App with expiring tokens enabled", async () => {
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
         overwriteRoutes: false,
-      }
+      },
     );
 
   const onVerification = jest.fn();
@@ -331,7 +331,7 @@ test("Request for user/device code fails", async () => {
           client_id: "1234567890abcdef1234",
           scope: "",
         },
-      }
+      },
     );
 
   const auth = createOAuthDeviceAuth({
@@ -350,7 +350,7 @@ test("Request for user/device code fails", async () => {
   await expect(async () =>
     auth({
       type: "oauth",
-    })
+    }),
   ).rejects.toThrow("error_description (some_error, error_url)");
 });
 
@@ -378,7 +378,7 @@ test("Caches token", async () => {
           client_id: "1234567890abcdef1234",
           scope: "",
         },
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -398,7 +398,7 @@ test("Caches token", async () => {
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
         overwriteRoutes: false,
-      }
+      },
     );
 
   const auth = createOAuthDeviceAuth({
@@ -459,7 +459,7 @@ test("auth({ refresh: true })", async () => {
           client_id: "1234567890abcdef1234",
           scope: "",
         },
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -479,7 +479,7 @@ test("auth({ refresh: true })", async () => {
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
         overwriteRoutes: false,
-      }
+      },
     )
 
     // 2nd auth() call
@@ -504,7 +504,7 @@ test("auth({ refresh: true })", async () => {
           scope: "",
         },
         overwriteRoutes: false,
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -524,7 +524,7 @@ test("auth({ refresh: true })", async () => {
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
         overwriteRoutes: false,
-      }
+      },
     );
 
   const auth = createOAuthDeviceAuth({
@@ -593,7 +593,7 @@ test("refreshes token for different scopes", async () => {
           client_id: "1234567890abcdef1234",
           scope: "",
         },
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -613,7 +613,7 @@ test("refreshes token for different scopes", async () => {
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
         overwriteRoutes: false,
-      }
+      },
     )
 
     // 2nd auth() call
@@ -638,7 +638,7 @@ test("refreshes token for different scopes", async () => {
           scope: "repo",
         },
         overwriteRoutes: false,
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -658,7 +658,7 @@ test("refreshes token for different scopes", async () => {
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
         overwriteRoutes: false,
-      }
+      },
     );
 
   const auth = createOAuthDeviceAuth({
@@ -726,7 +726,7 @@ test("does not refresh token for GitHub Apps", async () => {
         body: {
           client_id: "lv1.1234567890abcdef",
         },
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -746,7 +746,7 @@ test("does not refresh token for GitHub Apps", async () => {
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
         overwriteRoutes: false,
-      }
+      },
     )
 
     // 2nd auth() call
@@ -771,7 +771,7 @@ test("does not refresh token for GitHub Apps", async () => {
           scope: "repo",
         },
         overwriteRoutes: false,
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -791,7 +791,7 @@ test("does not refresh token for GitHub Apps", async () => {
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
         overwriteRoutes: false,
-      }
+      },
     );
 
   const auth = createOAuthDeviceAuth({
@@ -851,7 +851,7 @@ test("test with request instance that has custom baseUrl (GHE)", async () => {
           client_id: "1234567890abcdef1234",
           scope: "",
         },
-      }
+      },
     )
     .postOnce(
       "https://github.acme-inc.com/login/oauth/access_token",
@@ -871,7 +871,7 @@ test("test with request instance that has custom baseUrl (GHE)", async () => {
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
         overwriteRoutes: false,
-      }
+      },
     );
 
   const auth = createOAuthDeviceAuth({
@@ -924,7 +924,7 @@ test("slow_down error", async () => {
           client_id: "1234567890abcdef1234",
           scope: "",
         },
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -944,7 +944,7 @@ test("slow_down error", async () => {
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -964,7 +964,7 @@ test("slow_down error", async () => {
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
         overwriteRoutes: false,
-      }
+      },
     );
 
   const auth = createOAuthDeviceAuth({
@@ -1018,7 +1018,7 @@ test("expired_token error", async () => {
           client_id: "1234567890abcdef1234",
           scope: "",
         },
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -1038,7 +1038,7 @@ test("expired_token error", async () => {
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-      }
+      },
     );
 
   const auth = createOAuthDeviceAuth({
@@ -1055,7 +1055,7 @@ test("expired_token error", async () => {
   });
 
   await expect(async () => await auth({ type: "oauth" })).rejects.toThrow(
-    "error_description (expired_token, error_url)"
+    "error_description (expired_token, error_url)",
   );
 }, 10000);
 
@@ -1083,7 +1083,7 @@ test("auth.hook() creates token and uses it for succeeding requests", async () =
           client_id: "1234567890abcdef1234",
           scope: "",
         },
-      }
+      },
     )
     .postOnce(
       "https://github.com/login/oauth/access_token",
@@ -1103,7 +1103,7 @@ test("auth.hook() creates token and uses it for succeeding requests", async () =
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
         overwriteRoutes: false,
-      }
+      },
     )
     .get(
       "https://api.github.com/user",
@@ -1113,7 +1113,7 @@ test("auth.hook() creates token and uses it for succeeding requests", async () =
           authorization: "token secret123",
         },
         repeat: 4,
-      }
+      },
     );
 
   const auth = createOAuthDeviceAuth({
@@ -1182,9 +1182,9 @@ test("clientId option not set", () => {
     // @ts-expect-error property 'clientId' is missing
     createOAuthDeviceAuth({
       onVerification: jest.fn(),
-    })
+    }),
   ).toThrow(
-    `[@octokit/auth-oauth-device] \"clientId\" option must be set (https://github.com/octokit/auth-oauth-device.js#usage)`
+    `[@octokit/auth-oauth-device] \"clientId\" option must be set (https://github.com/octokit/auth-oauth-device.js#usage)`,
   );
 });
 
@@ -1193,8 +1193,8 @@ test("onVerification option not set", () => {
     // @ts-expect-error property 'onVerification' is missing
     createOAuthDeviceAuth({
       clientId: "1234567890abcdef1234",
-    })
+    }),
   ).toThrow(
-    `[@octokit/auth-oauth-device] "onVerification" option must be a function (https://github.com/octokit/auth-oauth-device.js#usage)`
+    `[@octokit/auth-oauth-device] "onVerification" option must be a function (https://github.com/octokit/auth-oauth-device.js#usage)`,
   );
 });

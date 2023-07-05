@@ -10,7 +10,7 @@ import type {
 
 export async function auth(
   state: OAuthAppState | GitHubAppState,
-  authOptions: OAuthAppAuthOptions | GitHubAppAuthOptions
+  authOptions: OAuthAppAuthOptions | GitHubAppAuthOptions,
 ): Promise<OAuthAppAuthentication | GitHubAppAuthentication> {
   return getOAuthAccessToken(state, {
     auth: authOptions,

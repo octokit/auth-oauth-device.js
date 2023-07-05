@@ -33,19 +33,19 @@ export interface OAuthAppAuthInterface {
   hook(
     request: RequestInterface,
     route: Route | EndpointOptions,
-    parameters?: RequestParameters
+    parameters?: RequestParameters,
   ): Promise<OctokitResponse<any>>;
 }
 
 export interface GitHubAppAuthInterface {
-  (options: GitHubAppAuthOptions): Promise<
-    GitHubAppAuthentication | GitHubAppAuthenticationWithExpiration
-  >;
+  (
+    options: GitHubAppAuthOptions,
+  ): Promise<GitHubAppAuthentication | GitHubAppAuthenticationWithExpiration>;
 
   hook(
     request: RequestInterface,
     route: Route | EndpointOptions,
-    parameters?: RequestParameters
+    parameters?: RequestParameters,
   ): Promise<OctokitResponse<any>>;
 }
 
@@ -84,7 +84,7 @@ export type Verification = {
 };
 
 export type OnVerificationCallback = (
-  verification: Verification
+  verification: Verification,
 ) => any | Promise<any>;
 
 export type OAuthAppState = {
