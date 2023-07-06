@@ -25,15 +25,15 @@ export type {
 } from "./types";
 
 export function createOAuthDeviceAuth(
-  options: OAuthAppStrategyOptions
+  options: OAuthAppStrategyOptions,
 ): OAuthAppAuthInterface;
 
 export function createOAuthDeviceAuth(
-  options: GitHubAppStrategyOptions
+  options: GitHubAppStrategyOptions,
 ): GitHubAppAuthInterface;
 
 export function createOAuthDeviceAuth(
-  options: OAuthAppStrategyOptions | GitHubAppStrategyOptions
+  options: OAuthAppStrategyOptions | GitHubAppStrategyOptions,
 ): OAuthAppAuthInterface | GitHubAppAuthInterface {
   const requestWithDefaults =
     options.request ||
@@ -61,13 +61,13 @@ export function createOAuthDeviceAuth(
 
   if (!options.clientId) {
     throw new Error(
-      '[@octokit/auth-oauth-device] "clientId" option must be set (https://github.com/octokit/auth-oauth-device.js#usage)'
+      '[@octokit/auth-oauth-device] "clientId" option must be set (https://github.com/octokit/auth-oauth-device.js#usage)',
     );
   }
 
   if (!options.onVerification) {
     throw new Error(
-      '[@octokit/auth-oauth-device] "onVerification" option must be a function (https://github.com/octokit/auth-oauth-device.js#usage)'
+      '[@octokit/auth-oauth-device] "onVerification" option must be a function (https://github.com/octokit/auth-oauth-device.js#usage)',
     );
   }
 
