@@ -68,12 +68,18 @@ export type OAuthAppAuthentication = {
 export type GitHubAppAuthentication = {
   type: "token";
   tokenType: "oauth";
-} & Omit<OAuthMethodsTypes.GitHubAppAuthentication, "clientSecret">;
+} & Omit<
+  OAuthMethodsTypes.GitHubAppAuthenticationWithExpirationDisabled,
+  "clientSecret"
+>;
 
 export type GitHubAppAuthenticationWithExpiration = {
   type: "token";
   tokenType: "oauth";
-} & Omit<OAuthMethodsTypes.GitHubAppAuthentication, "clientSecret">;
+} & Omit<
+  OAuthMethodsTypes.GitHubAppAuthenticationWithRefreshToken,
+  "clientSecret"
+>;
 
 export type Verification = {
   device_code: string;
