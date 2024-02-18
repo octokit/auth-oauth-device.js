@@ -244,7 +244,7 @@ createOAuthDeviceAuth({
       </th>
       <td>
 
-Only relavant if `clientType` is set to `"oauth-app"`.
+Only relevant if `clientType` is set to `"oauth-app"`.
 
 Array of scope names enabled for the token. Defaults to `[]`. See [available scopes](https://docs.github.com/en/developers/apps/scopes-for-oauth-apps#available-scopes).
 
