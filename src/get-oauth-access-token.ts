@@ -11,7 +11,7 @@ import type {
   ClientType,
   GitHubAppAuthenticationWithExpiration,
   Verification,
-} from "./types";
+} from "./types.js";
 
 export async function getOAuthAccessToken(
   state: OAuthAppState | GitHubAppState,

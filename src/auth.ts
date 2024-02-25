@@ -1,4 +1,4 @@
-import { getOAuthAccessToken } from "./get-oauth-access-token";
+import { getOAuthAccessToken } from "./get-oauth-access-token.js";
 import type {
   OAuthAppAuthOptions,
   GitHubAppAuthOptions,
@@ -6,7 +6,7 @@ import type {
   GitHubAppAuthentication,
   OAuthAppState,
   GitHubAppState,
-} from "./types";
+} from "./types.js";
 
 export async function auth(
   state: OAuthAppState | GitHubAppState,

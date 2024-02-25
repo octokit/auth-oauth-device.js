@@ -1,8 +1,8 @@
 import { getUserAgent } from "universal-user-agent";
 import { request as octokitRequest } from "@octokit/request";
 
-import { auth } from "./auth";
-import { hook } from "./hook";
+import { auth } from "./auth.js";
+import { hook } from "./hook.js";
 import type {
   GitHubAppAuthInterface,
   GitHubAppState,
@@ -10,8 +10,8 @@ import type {
   OAuthAppAuthInterface,
   OAuthAppState,
   OAuthAppStrategyOptions,
-} from "./types";
-import { VERSION } from "./version";
+} from "./types.js";
+import { VERSION } from "./version.js";
 
 // Remember to update README.md#Types when changing exports
 export type {
@@ -22,7 +22,7 @@ export type {
   GitHubAppAuthOptions,
   GitHubAppAuthentication,
   GitHubAppAuthenticationWithExpiration,
-} from "./types";
+} from "./types.js";
 
 export function createOAuthDeviceAuth(
   options: OAuthAppStrategyOptions,

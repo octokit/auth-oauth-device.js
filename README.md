@@ -54,7 +54,7 @@ Node
 Install with `npm install @octokit/core @octokit/auth-oauth-device`
 
 ```js
-const { createOAuthDeviceAuth } = require("@octokit/auth-oauth-device");
+import { createOAuthDeviceAuth } from "@octokit/auth-oauth-device";
 ```
 
 </td></tr>
@@ -224,7 +224,7 @@ Must be either `oauth-app` or `github-app`. Defaults to `oauth-app`.
         You can pass in your own <a href="https://github.com/octokit/request.js"><code>@octokit/request</code></a> instance. For usage with enterprise, set <code>baseUrl</code> to the API root endpoint. Example:
 
 ```js
-const { request } = require("@octokit/request");
+import { request } from "@octokit/request";
 createOAuthDeviceAuth({
   clientId: "1234567890abcdef1234",
   clientSecret: "secret",
