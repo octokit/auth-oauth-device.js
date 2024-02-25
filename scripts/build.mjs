@@ -35,7 +35,7 @@ async function main() {
   }
 
   await esbuild.build({
-    entryPoints: ["./dist-src/index.js"],
+    entryPoints: ["./pkg/dist-src/index.js"],
     outdir: "pkg/dist-bundle",
     bundle: true,
     ...sharedOptions,
