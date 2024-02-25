@@ -1,7 +1,8 @@
 import fetchMock from "fetch-mock";
 import { request } from "@octokit/request";
+import { jest } from "@jest/globals";
 
-import { createOAuthDeviceAuth } from "../src/index";
+import { createOAuthDeviceAuth } from "../src/index.js";
 
 test("README example", async () => {
   const mock = fetchMock

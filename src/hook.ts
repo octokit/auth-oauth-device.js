@@ -6,8 +6,8 @@ import type {
   Route,
 } from "@octokit/types";
 
-import { getOAuthAccessToken } from "./get-oauth-access-token";
-import type { OAuthAppState, GitHubAppState } from "./types";
+import { getOAuthAccessToken } from "./get-oauth-access-token.js";
+import type { OAuthAppState, GitHubAppState } from "./types.js";
 import type { EndpointDefaults } from "@octokit/types";
 
 export async function hook(
