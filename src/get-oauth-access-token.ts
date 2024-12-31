@@ -111,7 +111,7 @@ async function waitForAccessToken(
       ...authentication,
     };
   } catch (error) {
-    // istanbul ignore if
+    /* v8 ignore next 2 */
     // @ts-ignore
     if (!error.response) throw error;
 
