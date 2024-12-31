@@ -6,7 +6,7 @@ import type {
   OctokitResponse,
 } from "@octokit/types";
 
-import * as OAuthMethodsTypes from "@octokit/oauth-methods";
+import type * as OAuthMethodsTypes from "@octokit/oauth-methods";
 
 export type ClientType = "oauth-app" | "github-app";
 
