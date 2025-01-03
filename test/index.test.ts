@@ -1,6 +1,6 @@
+import { test, expect, vi } from "vitest";
 import fetchMock from "fetch-mock";
 import { request } from "@octokit/request";
-import { jest } from "@jest/globals";
 
 import { createOAuthDeviceAuth } from "../src/index.js";
 
@@ -15,7 +15,7 @@ test("README example", async () => {
         user_code: "usercode123",
         verification_uri: "https://github.com/login/device",
         expires_in: 900,
-        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        // use low number because vi.useFakeTimers() & vi.runAllTimers() didn't work for me
         interval: 0.005,
       },
       {
@@ -71,7 +71,7 @@ test("README example", async () => {
       },
     );
 
-  const onVerification = jest.fn();
+  const onVerification = vi.fn();
   const auth = createOAuthDeviceAuth({
     clientId: "1234567890abcdef1234",
     onVerification,
@@ -112,7 +112,7 @@ test("README example for GitHub App with expiring tokens disabled", async () => 
         user_code: "usercode123",
         verification_uri: "https://github.com/login/device",
         expires_in: 900,
-        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        // use low number because vi.useFakeTimers() & vi.runAllTimers() didn't work for me
         interval: 0.005,
       },
       {
@@ -173,7 +173,7 @@ test("README example for GitHub App with expiring tokens disabled", async () => 
       },
     );
 
-  const onVerification = jest.fn();
+  const onVerification = vi.fn();
   const auth = createOAuthDeviceAuth({
     clientType: "github-app",
     clientId: "lv1.1234567890abcdef",
@@ -214,7 +214,7 @@ test("README example for GitHub App with expiring tokens enabled", async () => {
         user_code: "usercode123",
         verification_uri: "https://github.com/login/device",
         expires_in: 900,
-        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        // use low number because vi.useFakeTimers() & vi.runAllTimers() didn't work for me
         interval: 0.005,
       },
       {
@@ -278,7 +278,7 @@ test("README example for GitHub App with expiring tokens enabled", async () => {
       },
     );
 
-  const onVerification = jest.fn();
+  const onVerification = vi.fn();
   const auth = createOAuthDeviceAuth({
     clientType: "github-app",
     clientId: "lv1.1234567890abcdef",
@@ -337,7 +337,7 @@ test("Request for user/device code fails", async () => {
 
   const auth = createOAuthDeviceAuth({
     clientId: "1234567890abcdef1234",
-    onVerification: jest.fn(),
+    onVerification: vi.fn(),
     request: request.defaults({
       headers: {
         "user-agent": "test",
@@ -366,7 +366,7 @@ test("Caches token", async () => {
         user_code: "usercode123",
         verification_uri: "https://github.com/login/device",
         expires_in: 900,
-        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        // use low number because vi.useFakeTimers() & vi.runAllTimers() didn't work for me
         interval: 0.005,
       },
       {
@@ -404,7 +404,7 @@ test("Caches token", async () => {
 
   const auth = createOAuthDeviceAuth({
     clientId: "1234567890abcdef1234",
-    onVerification: jest.fn(),
+    onVerification: vi.fn(),
     request: request.defaults({
       headers: {
         "user-agent": "test",
@@ -447,7 +447,7 @@ test("auth({ refresh: true })", async () => {
         user_code: "usercode123",
         verification_uri: "https://github.com/login/device",
         expires_in: 900,
-        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        // use low number because vi.useFakeTimers() & vi.runAllTimers() didn't work for me
         interval: 0.005,
       },
       {
@@ -491,7 +491,7 @@ test("auth({ refresh: true })", async () => {
         user_code: "usercode456",
         verification_uri: "https://github.com/login/device",
         expires_in: 900,
-        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        // use low number because vi.useFakeTimers() & vi.runAllTimers() didn't work for me
         interval: 0.005,
       },
       {
@@ -530,7 +530,7 @@ test("auth({ refresh: true })", async () => {
 
   const auth = createOAuthDeviceAuth({
     clientId: "1234567890abcdef1234",
-    onVerification: jest.fn(),
+    onVerification: vi.fn(),
     request: request.defaults({
       headers: {
         "user-agent": "test",
@@ -581,7 +581,7 @@ test("refreshes token for different scopes", async () => {
         user_code: "usercode123",
         verification_uri: "https://github.com/login/device",
         expires_in: 900,
-        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        // use low number because vi.useFakeTimers() & vi.runAllTimers() didn't work for me
         interval: 0.005,
       },
       {
@@ -625,7 +625,7 @@ test("refreshes token for different scopes", async () => {
         user_code: "usercode456",
         verification_uri: "https://github.com/login/device",
         expires_in: 900,
-        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        // use low number because vi.useFakeTimers() & vi.runAllTimers() didn't work for me
         interval: 0.005,
       },
       {
@@ -664,7 +664,7 @@ test("refreshes token for different scopes", async () => {
 
   const auth = createOAuthDeviceAuth({
     clientId: "1234567890abcdef1234",
-    onVerification: jest.fn(),
+    onVerification: vi.fn(),
     request: request.defaults({
       headers: {
         "user-agent": "test",
@@ -715,7 +715,7 @@ test("does not refresh token for GitHub Apps", async () => {
         user_code: "usercode123",
         verification_uri: "https://github.com/login/device",
         expires_in: 900,
-        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        // use low number because vi.useFakeTimers() & vi.runAllTimers() didn't work for me
         interval: 0.005,
       },
       {
@@ -758,7 +758,7 @@ test("does not refresh token for GitHub Apps", async () => {
         user_code: "usercode456",
         verification_uri: "https://github.com/login/device",
         expires_in: 900,
-        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        // use low number because vi.useFakeTimers() & vi.runAllTimers() didn't work for me
         interval: 0.005,
       },
       {
@@ -798,7 +798,7 @@ test("does not refresh token for GitHub Apps", async () => {
   const auth = createOAuthDeviceAuth({
     clientType: "github-app",
     clientId: "lv1.1234567890abcdef",
-    onVerification: jest.fn(),
+    onVerification: vi.fn(),
     request: request.defaults({
       headers: {
         "user-agent": "test",
@@ -839,7 +839,7 @@ test("test with request instance that has custom baseUrl (GHE)", async () => {
         user_code: "usercode123",
         verification_uri: "https://github.acme-inc.com/login/device",
         expires_in: 900,
-        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        // use low number because vi.useFakeTimers() & vi.runAllTimers() didn't work for me
         interval: 0.005,
       },
       {
@@ -877,7 +877,7 @@ test("test with request instance that has custom baseUrl (GHE)", async () => {
 
   const auth = createOAuthDeviceAuth({
     clientId: "1234567890abcdef1234",
-    onVerification: jest.fn(),
+    onVerification: vi.fn(),
     request: request.defaults({
       baseUrl: "https://github.acme-inc.com/api/v3",
       headers: {
@@ -912,7 +912,7 @@ test("slow_down error", async () => {
         user_code: "usercode123",
         verification_uri: "https://github.com/login/device",
         expires_in: 900,
-        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        // use low number because vi.useFakeTimers() & vi.runAllTimers() didn't work for me
         interval: 0.005,
       },
       {
@@ -970,7 +970,7 @@ test("slow_down error", async () => {
 
   const auth = createOAuthDeviceAuth({
     clientId: "1234567890abcdef1234",
-    onVerification: jest.fn(),
+    onVerification: vi.fn(),
     request: request.defaults({
       headers: {
         "user-agent": "test",
@@ -1006,7 +1006,7 @@ test("expired_token error", async () => {
         user_code: "usercode123",
         verification_uri: "https://github.com/login/device",
         expires_in: 900,
-        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        // use low number because vi.useFakeTimers() & vi.runAllTimers() didn't work for me
         interval: 0.005,
       },
       {
@@ -1044,7 +1044,7 @@ test("expired_token error", async () => {
 
   const auth = createOAuthDeviceAuth({
     clientId: "1234567890abcdef1234",
-    onVerification: jest.fn(),
+    onVerification: vi.fn(),
     request: request.defaults({
       headers: {
         "user-agent": "test",
@@ -1071,7 +1071,7 @@ test("auth.hook() creates token and uses it for succeeding requests", async () =
         user_code: "usercode123",
         verification_uri: "https://github.com/login/device",
         expires_in: 900,
-        // use low number because jest.useFakeTimers() & jest.runAllTimers() didn't work for me
+        // use low number because vi.useFakeTimers() & vi.runAllTimers() didn't work for me
         interval: 0.005,
       },
       {
@@ -1119,7 +1119,7 @@ test("auth.hook() creates token and uses it for succeeding requests", async () =
 
   const auth = createOAuthDeviceAuth({
     clientId: "1234567890abcdef1234",
-    onVerification: jest.fn(),
+    onVerification: vi.fn(),
   });
 
   const requestWithMock = request.defaults({
@@ -1155,7 +1155,7 @@ test("auth.hook(request, 'POST https://github.com/login/oauth/access_token') doe
 
   const auth = createOAuthDeviceAuth({
     clientId: "1234567890abcdef1234",
-    onVerification: jest.fn(),
+    onVerification: vi.fn(),
   });
 
   const requestWithAuth = request.defaults({
@@ -1182,7 +1182,7 @@ test("clientId option not set", () => {
   expect(() =>
     // @ts-expect-error property 'clientId' is missing
     createOAuthDeviceAuth({
-      onVerification: jest.fn(),
+      onVerification: vi.fn(),
     }),
   ).toThrow(
     `[@octokit/auth-oauth-device] \"clientId\" option must be set (https://github.com/octokit/auth-oauth-device.js#usage)`,
