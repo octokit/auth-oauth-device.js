@@ -6,7 +6,7 @@ import { createOAuthDeviceAuth } from "../src/index.js";
 
 test("README example", async () => {
   const mock = fetchMock
-    .sandbox()
+    .createInstance()
 
     .postOnce(
       "https://github.com/login/device/code",
@@ -67,7 +67,6 @@ test("README example", async () => {
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-        overwriteRoutes: false,
       },
     );
 
@@ -80,7 +79,7 @@ test("README example", async () => {
         "user-agent": "test",
       },
       request: {
-        fetch: mock,
+        fetch: mock.fetchHandler,
       },
     }),
   });
@@ -103,8 +102,7 @@ test("README example", async () => {
 
 test("README example for GitHub App with expiring tokens disabled", async () => {
   const mock = fetchMock
-    .sandbox()
-
+    .createInstance()
     .postOnce(
       "https://github.com/login/device/code",
       {
@@ -169,7 +167,6 @@ test("README example for GitHub App with expiring tokens disabled", async () => 
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-        overwriteRoutes: false,
       },
     );
 
@@ -183,7 +180,7 @@ test("README example for GitHub App with expiring tokens disabled", async () => 
         "user-agent": "test",
       },
       request: {
-        fetch: mock,
+        fetch: mock.fetchHandler,
       },
     }),
   });
@@ -205,7 +202,7 @@ test("README example for GitHub App with expiring tokens disabled", async () => 
 
 test("README example for GitHub App with expiring tokens enabled", async () => {
   const mock = fetchMock
-    .sandbox()
+    .createInstance()
 
     .postOnce(
       "https://github.com/login/device/code",
@@ -274,7 +271,6 @@ test("README example for GitHub App with expiring tokens enabled", async () => {
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-        overwriteRoutes: false,
       },
     );
 
@@ -288,7 +284,7 @@ test("README example for GitHub App with expiring tokens enabled", async () => {
         "user-agent": "test",
       },
       request: {
-        fetch: mock,
+        fetch: mock.fetchHandler,
       },
     }),
   });
@@ -313,7 +309,7 @@ test("README example for GitHub App with expiring tokens enabled", async () => {
 
 test("Request for user/device code fails", async () => {
   const mock = fetchMock
-    .sandbox()
+    .createInstance()
 
     .postOnce(
       "https://github.com/login/device/code",
@@ -343,7 +339,7 @@ test("Request for user/device code fails", async () => {
         "user-agent": "test",
       },
       request: {
-        fetch: mock,
+        fetch: mock.fetchHandler,
       },
     }),
   });
@@ -357,7 +353,7 @@ test("Request for user/device code fails", async () => {
 
 test("Caches token", async () => {
   const mock = fetchMock
-    .sandbox()
+    .createInstance()
 
     .postOnce(
       "https://github.com/login/device/code",
@@ -398,7 +394,6 @@ test("Caches token", async () => {
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-        overwriteRoutes: false,
       },
     );
 
@@ -410,7 +405,7 @@ test("Caches token", async () => {
         "user-agent": "test",
       },
       request: {
-        fetch: mock,
+        fetch: mock.fetchHandler,
       },
     }),
   });
@@ -437,7 +432,7 @@ test("Caches token", async () => {
 
 test("auth({ refresh: true })", async () => {
   const mock = fetchMock
-    .sandbox()
+    .createInstance()
 
     // 1st auth() call
     .postOnce(
@@ -479,7 +474,6 @@ test("auth({ refresh: true })", async () => {
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-        overwriteRoutes: false,
       },
     )
 
@@ -504,7 +498,6 @@ test("auth({ refresh: true })", async () => {
           client_id: "1234567890abcdef1234",
           scope: "",
         },
-        overwriteRoutes: false,
       },
     )
     .postOnce(
@@ -524,7 +517,6 @@ test("auth({ refresh: true })", async () => {
           device_code: "devicecode456",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-        overwriteRoutes: false,
       },
     );
 
@@ -536,7 +528,7 @@ test("auth({ refresh: true })", async () => {
         "user-agent": "test",
       },
       request: {
-        fetch: mock,
+        fetch: mock.fetchHandler,
       },
     }),
   });
@@ -571,7 +563,7 @@ test("auth({ refresh: true })", async () => {
 
 test("refreshes token for different scopes", async () => {
   const mock = fetchMock
-    .sandbox()
+    .createInstance()
 
     // 1st auth() call
     .postOnce(
@@ -613,7 +605,6 @@ test("refreshes token for different scopes", async () => {
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-        overwriteRoutes: false,
       },
     )
 
@@ -638,7 +629,6 @@ test("refreshes token for different scopes", async () => {
           client_id: "1234567890abcdef1234",
           scope: "repo",
         },
-        overwriteRoutes: false,
       },
     )
     .postOnce(
@@ -658,7 +648,6 @@ test("refreshes token for different scopes", async () => {
           device_code: "devicecode456",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-        overwriteRoutes: false,
       },
     );
 
@@ -670,7 +659,7 @@ test("refreshes token for different scopes", async () => {
         "user-agent": "test",
       },
       request: {
-        fetch: mock,
+        fetch: mock.fetchHandler,
       },
     }),
   });
@@ -705,7 +694,7 @@ test("refreshes token for different scopes", async () => {
 
 test("does not refresh token for GitHub Apps", async () => {
   const mock = fetchMock
-    .sandbox()
+    .createInstance()
 
     // 1st auth() call
     .postOnce(
@@ -746,7 +735,6 @@ test("does not refresh token for GitHub Apps", async () => {
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-        overwriteRoutes: false,
       },
     )
 
@@ -771,7 +759,6 @@ test("does not refresh token for GitHub Apps", async () => {
           client_id: "lv1.1234567890abcdef",
           scope: "repo",
         },
-        overwriteRoutes: false,
       },
     )
     .postOnce(
@@ -791,7 +778,6 @@ test("does not refresh token for GitHub Apps", async () => {
           device_code: "devicecode456",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-        overwriteRoutes: false,
       },
     );
 
@@ -804,7 +790,7 @@ test("does not refresh token for GitHub Apps", async () => {
         "user-agent": "test",
       },
       request: {
-        fetch: mock,
+        fetch: mock.fetchHandler,
       },
     }),
   });
@@ -830,7 +816,7 @@ test("does not refresh token for GitHub Apps", async () => {
 
 test("test with request instance that has custom baseUrl (GHE)", async () => {
   const mock = fetchMock
-    .sandbox()
+    .createInstance()
 
     .postOnce(
       "https://github.acme-inc.com/login/device/code",
@@ -871,7 +857,6 @@ test("test with request instance that has custom baseUrl (GHE)", async () => {
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-        overwriteRoutes: false,
       },
     );
 
@@ -884,7 +869,7 @@ test("test with request instance that has custom baseUrl (GHE)", async () => {
         "user-agent": "test",
       },
       request: {
-        fetch: mock,
+        fetch: mock.fetchHandler,
       },
     }),
   });
@@ -903,7 +888,7 @@ test("test with request instance that has custom baseUrl (GHE)", async () => {
 
 test("slow_down error", async () => {
   const mock = fetchMock
-    .sandbox()
+    .createInstance()
 
     .postOnce(
       "https://github.com/login/device/code",
@@ -964,7 +949,6 @@ test("slow_down error", async () => {
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-        overwriteRoutes: false,
       },
     );
 
@@ -976,7 +960,7 @@ test("slow_down error", async () => {
         "user-agent": "test",
       },
       request: {
-        fetch: mock,
+        fetch: mock.fetchHandler,
       },
     }),
   });
@@ -997,7 +981,7 @@ test("slow_down error", async () => {
 
 test("expired_token error", async () => {
   const mock = fetchMock
-    .sandbox()
+    .createInstance()
 
     .postOnce(
       "https://github.com/login/device/code",
@@ -1050,7 +1034,7 @@ test("expired_token error", async () => {
         "user-agent": "test",
       },
       request: {
-        fetch: mock,
+        fetch: mock.fetchHandler,
       },
     }),
   });
@@ -1062,7 +1046,7 @@ test("expired_token error", async () => {
 
 test("auth.hook() creates token and uses it for succeeding requests", async () => {
   const mock = fetchMock
-    .sandbox()
+    .createInstance()
 
     .postOnce(
       "https://github.com/login/device/code",
@@ -1103,7 +1087,6 @@ test("auth.hook() creates token and uses it for succeeding requests", async () =
           device_code: "devicecode123",
           grant_type: "urn:ietf:params:oauth:grant-type:device_code",
         },
-        overwriteRoutes: false,
       },
     )
     .get(
@@ -1127,7 +1110,7 @@ test("auth.hook() creates token and uses it for succeeding requests", async () =
       "user-agent": "test",
     },
     request: {
-      fetch: mock,
+      fetch: mock.fetchHandler,
     },
   });
   const requestWithAuth = requestWithMock.defaults({
@@ -1142,12 +1125,12 @@ test("auth.hook() creates token and uses it for succeeding requests", async () =
   await requestWithAuth("GET /user");
   await requestWithAuth("GET /user");
 
-  expect(mock.done()).toBe(true);
+  expect(mock.callHistory.done()).toBe(true);
 });
 
 test("auth.hook(request, 'POST https://github.com/login/oauth/access_token') does not send request twice", async () => {
   const mock = fetchMock
-    .sandbox()
+    .createInstance()
     .postOnce("https://github.com/login/oauth/access_token", {
       access_token: "secret123",
       scope: "",
@@ -1163,7 +1146,7 @@ test("auth.hook(request, 'POST https://github.com/login/oauth/access_token') doe
       "user-agent": "test",
     },
     request: {
-      fetch: mock,
+      fetch: mock.fetchHandler,
       hook: auth.hook,
     },
   });
