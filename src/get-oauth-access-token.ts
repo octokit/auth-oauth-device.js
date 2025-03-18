@@ -124,7 +124,7 @@ async function waitForAccessToken(
     }
 
     if (errorType === "slow_down") {
-      await wait(verification.interval + 5);
+      await wait(verification.interval + 7);
       return waitForAccessToken(request, clientId, clientType, verification);
     }
 
