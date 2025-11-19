@@ -111,7 +111,7 @@ async function waitForAccessToken(
       ...authentication,
     };
   } catch (error) {
-    /* v8 ignore next 2 */
+    /* v8 ignore next 2 -- @preserve */
     // @ts-ignore
     if (!error.response) throw error;
 
