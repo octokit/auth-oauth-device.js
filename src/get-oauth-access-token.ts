@@ -110,9 +110,8 @@ async function waitForAccessToken(
       tokenType: "oauth",
       ...authentication,
     };
-  } catch (error) {
+  } catch (error: any) {
     /* v8 ignore next 2 -- @preserve */
-    // @ts-ignore
     if (!error.response) throw error;
 
     // @ts-ignore
